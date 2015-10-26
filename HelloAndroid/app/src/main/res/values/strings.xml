@@ -5,4 +5,6 @@
     <string name="long_text">测试长句子测试长句子测试长句子测试长句子测试长句子测试长句子测试长句子</string>
     <string name="short_text">单行显示单行显示单行显示单行显示单行显示单行显示单行显示单行显示单行显示单行显示</string>
     <string name="pic_text">带图片text</string>
+    <string name="UserName">用户名：</string>
+    <string name="Password">密码：</string>
 </resources>
