@@ -20,11 +20,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static final String[] autoinfo = new String[]
+            {"abstract","c#ccccccc","sdffdasd","uuushhh","ppppoooosd","yyyyyddff","nnnnddff","aaaaayyyyy"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         tView2.setText(styleBuilder);
 
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,autoinfo);
+        AutoCompleteTextView actxTextView=(AutoCompleteTextView)findViewById(R.id.AutoCompleteText);
+        actxTextView.setAdapter(adapter);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,19 +60,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-//        FrameLayout frameLayout=(FrameLayout)findViewById(R.id.mylayout);
-//        final UserView view = new UserView(MainActivity.this);
-//
-//        view.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                view.invalidate();
-//                return true;
-//            }
-//        });
-//        frameLayout.addView(view);
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

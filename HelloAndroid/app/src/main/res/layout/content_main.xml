@@ -1,90 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_main" tools:context=".MainActivity">
+    tools:showIn="@layout/activity_main"
+    tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:singleLine="true"
-        android:text="@string/short_text"
-        android:textSize="14sp"
-        android:textColor="#00ff00"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="false"
-        android:id="@+id/textView4" />
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/long_text"
         android:textSize="14sp"
         android:textColor="#00ff00"
-        android:id="@+id/textView3"
-        android:layout_marginTop="52dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/long_text"
+        android:layout_below="@+id/mail" />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/mail"
         android:autoLink="email"
         android:maxHeight="50dp"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/tv3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/mail"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="@string/short_text"
+        android:textSize="14sp"
+        android:textColor="#00ff00"
+        android:id="@+id/short_text"
+        android:layout_below="@+id/long_text"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pic_text"
         android:drawableTop="@drawable/testpic"
         android:maxHeight="50dp"
-        android:id="@+id/textView"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/pic_text"
+        android:layout_below="@+id/short_text" />
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv3"
         android:textSize="16sp"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/pic_text" />
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv4"
         android:textSize="18sp"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/tv3" />
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
         android:hint="@string/UserName"
-        android:id="@+id/editText"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/usrname"
+        android:layout_below="@+id/tv4" />
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:hint="@string/Password"
-        android:layout_below="@+id/editText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
+        android:layout_below="@+id/usrname"
+        android:id="@+id/pass" />
+    <AutoCompleteTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/AutoCompleteText"
+        android:completionThreshold="1"
+        android:layout_below="@+id/pass"
+        />
+    <Button
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/AutoCompleteText"
+        android:layout_alignParentRight="true"
+        android:text="Search"
+        />
 </RelativeLayout>
 
 <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
