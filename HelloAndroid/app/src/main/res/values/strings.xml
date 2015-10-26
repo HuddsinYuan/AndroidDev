@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">HelloAndroid</string>
     <string name="action_settings">Settings</string>
+    <string name="mail">huddsinyuan2014@gmail.com</string>
+    <string name="long_text">测试长句子测试长句子测试长句子测试长句子测试长句子测试长句子测试长句子</string>
+    <string name="short_text">单行显示单行显示单行显示单行显示单行显示单行显示单行显示单行显示单行显示单行显示</string>
+    <string name="pic_text">带图片text</string>
 </resources>

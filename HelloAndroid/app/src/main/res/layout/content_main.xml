@@ -10,13 +10,71 @@
     tools:showIn="@layout/activity_main" tools:context=".MainActivity">
 
     <TextView
-        android:text="YEAH"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:singleLine="true"
+        android:text="@string/short_text"
+        android:textSize="14sp"
+        android:textColor="#00ff00"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="false"
+        android:id="@+id/textView4" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/long_text"
+        android:textSize="14sp"
+        android:textColor="#00ff00"
+        android:id="@+id/textView3"
+        android:layout_marginTop="52dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="60dp"
-        android:textColor="@color/TextColour"
-        android:background="@color/TextBgd"
-        android:layout_alignParentStart="true"
+        android:text="@string/mail"
+        android:autoLink="email"
+        android:maxHeight="50dp"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/tv3"
         android:layout_alignParentLeft="true"
-        />
+        android:layout_alignParentStart="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pic_text"
+        android:drawableTop="@drawable/testpic"
+        android:maxHeight="50dp"
+        android:id="@+id/textView"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv3"
+        android:textSize="16sp"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv4"
+        android:textSize="18sp"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
 </RelativeLayout>
+
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@drawable/testpic"-->
+    <!--android:id="@+id/mylayout"-->
+    <!-->-->
+    <!--</FrameLayout>-->
