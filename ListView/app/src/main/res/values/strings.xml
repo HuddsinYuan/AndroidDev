@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">ListView</string>
+    <string name="action_settings">Settings</string>
+    <string name="info">This is a spinner</string>
+    <string name="desc">ImageAAAA</string>
+    <string name="prew">上一张</string>
+    <string name="next">下一张</string>
+
+
+    <string-array name="lan">
+        <item>python</item>
+        <item>android</item>
+        <item>java</item>
+        <item>c++</item>
+        <item>c</item>
+        <item>javascript</item>
+        <item>html</item>
+    </string-array>
+
+
+
+
+
+
+</resources>
