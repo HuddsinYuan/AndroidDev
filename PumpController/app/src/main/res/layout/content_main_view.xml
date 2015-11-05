@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainView">
+
+    <TextView
+        android:text="@string/above_all_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="32sp"
+        android:textColor="#ff0000"
+        android:id="@+id/above_all_title"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rt_title"
+        android:id="@+id/rt_title"
+        android:textSize="18sp"
+        android:textColor="#0000ff"
+        android:layout_marginTop="33dp"
+        android:layout_below="@+id/above_all_title"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_alignLeft="@id/rt_title"
+        android:text="@string/rt_title_total_time"
+        android:id="@+id/rt_title_total"
+        android:layout_below="@id/rt_title"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rt_ans_total"
+        android:text="@string/testVal"
+        android:layout_toRightOf="@id/rt_title_total"
+        android:layout_toEndOf="@id/rt_title_total"
+        android:layout_below="@id/rt_title"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rt_title_total"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_alignLeft="@id/rt_title"
+        android:text="@string/rt_title_water_time"
+        android:id="@+id/rt_title_water_time"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/rt_title_water_time"
+        android:layout_toEndOf="@id/rt_title_water_time"
+        android:layout_below="@id/rt_ans_total"
+        android:text="@string/testVal"
+        android:id="@+id/rt_ans_water_time"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rt_title_water_time"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_alignLeft="@id/rt_title"
+        android:text="@string/rt_title_cycle"
+        android:id="@+id/rt_title_cycle"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/rt_title_cycle"
+        android:layout_toEndOf="@id/rt_title_cycle"
+        android:layout_below="@id/rt_ans_water_time"
+        android:text="@string/testVal"
+        android:id="@+id/rt_ans_cycle"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rt_title_cycle"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_alignLeft="@id/rt_title"
+        android:text="@string/rt_title_each_time"
+        android:id="@+id/rt_title_each_time"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/rt_title_each_time"
+        android:layout_toEndOf="@id/rt_title_each_time"
+        android:layout_below="@id/rt_ans_cycle"
+        android:text="@string/testVal"
+        android:id="@+id/rt_ans_each_time"
+        />
+
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/data_usr"
+        android:id="@+id/data_usr"
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/data_usr"
+        android:layout_toRightOf="@id/data_usr"
+        android:layout_toEndOf="@id/data_usr"
+        android:text="@string/testVal"
+        android:id="@+id/data_ans_usr"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/data_title"
+        android:textSize="18sp"
+        android:textColor="#0000ff"
+        android:layout_marginTop="33dp"
+        android:id="@+id/textView"
+        android:layout_below="@+id/rt_title_each_time"
+        android:layout_alignLeft="@+id/rt_title_each_time"
+        android:layout_alignStart="@+id/rt_title_each_time" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/status"
+        android:layout_toRightOf="@id/textView"
+        android:layout_toEndOf="@id/textView"
+        android:layout_above="@id/data_usr"
+        android:text="@string/testVal"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/data_usr"
+        android:layout_alignLeft="@id/data_usr"
+        android:layout_alignStart="@id/data_usr"
+        android:text="@string/data_step"
+        android:id="@+id/data_step"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/data_step"
+        android:layout_toEndOf="@id/data_step"
+        android:layout_alignTop="@id/data_step"
+        android:text="@string/testVal"
+        android:id="@+id/data_ans_step"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/data_step"
+        android:layout_alignLeft="@id/data_usr"
+        android:layout_alignStart="@id/data_usr"
+        android:text="@string/data_cycle"
+        android:id="@+id/data_cycle"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/data_cycle"
+        android:layout_toEndOf="@id/data_cycle"
+        android:layout_alignTop="@id/data_cycle"
+        android:text="@string/testVal"
+        android:id="@+id/data_ans_cycle"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/data_cycle"
+        android:layout_alignStart="@id/data_usr"
+        android:layout_alignLeft="@id/data_usr"
+        android:text="@string/data_all_time"
+        android:id="@+id/data_all_time"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/data_all_time"
+        android:layout_toRightOf="@id/data_all_time"
+        android:layout_alignTop="@id/data_all_time"
+        android:text="@string/testVal"
+        android:id="@+id/data_ans_all_time"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_start"
+        android:id="@+id/btn_start"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_below="@+id/data_all_time"
+         />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/btn_start"
+        android:layout_toRightOf="@id/btn_start"
+        android:layout_toEndOf="@id/btn_start"
+        android:layout_marginStart="@dimen/button_margin_horizon"
+        android:layout_marginLeft="@dimen/button_margin_horizon"
+        android:text="@string/btn_pause"
+        android:id="@+id/btn_pause"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/btn_start"
+        android:layout_toEndOf="@id/btn_pause"
+        android:layout_toRightOf="@id/btn_pause"
+        android:layout_marginStart="@dimen/button_margin_horizon"
+        android:layout_marginLeft="@dimen/button_margin_horizon"
+        android:text="@string/btn_ff"
+        android:id="@+id/btn_ff"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/btn_start"
+        android:layout_alignStart="@id/btn_start"
+        android:layout_below="@id/btn_start"
+        android:layout_marginTop="@dimen/button_margin_vertical"
+        android:text="@string/btn_stop"
+        android:id="@+id/btn_stop"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_pause"
+        android:layout_toEndOf="@id/btn_stop"
+        android:layout_toRightOf="@id/btn_stop"
+        android:layout_marginLeft="@dimen/button_margin_horizon"
+        android:layout_marginStart="@dimen/button_margin_horizon"
+        android:layout_marginTop="@dimen/button_margin_vertical"
+        android:text="@string/btn_edit"
+        android:id="@+id/btn_edit"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_ff"
+        android:layout_toEndOf="@id/btn_edit"
+        android:layout_toRightOf="@id/btn_ff"
+        android:layout_marginLeft="@dimen/button_margin_horizon"
+        android:layout_marginStart="@dimen/button_margin_horizon"
+        android:layout_marginTop="@dimen/button_margin_vertical"
+        android:text="@string/btn_set"
+        android:id="@+id/btn_set"
+        />
+
+</RelativeLayout>
+
+
+
+

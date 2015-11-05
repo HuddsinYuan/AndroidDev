@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/single_item"
+    android:orientation="horizontal"
+    android:paddingBottom="10dp"
+    >
+
+    <Spinner
+        android:id="@+id/bottle_selector"
+        android:entries="@array/bottle_sel"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        >
+    </Spinner>
+
+    <EditText
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="@string/fluid_quantity"
+        android:id="@+id/fluid_quantity"
+        />
+
+    <CheckBox
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:text="@string/way_sel"
+        android:id="@+id/way_sel"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/test_point"
+
+        />
+
+</LinearLayout>
