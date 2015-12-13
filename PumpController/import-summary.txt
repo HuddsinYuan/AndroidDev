@@ -1,0 +1,68 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .DS_Store
+* doc/
+* doc/allclasses-frame.html
+* doc/allclasses-noframe.html
+* doc/com/
+* doc/com/friendlyarm/
+* doc/com/friendlyarm/LEDDemo/
+* doc/com/friendlyarm/LEDDemo/LEDTestingActivity.html
+* doc/com/friendlyarm/LEDDemo/class-use/
+* doc/com/friendlyarm/LEDDemo/class-use/LEDTestingActivity.html
+* doc/com/friendlyarm/LEDDemo/package-frame.html
+* doc/com/friendlyarm/LEDDemo/package-summary.html
+* doc/com/friendlyarm/LEDDemo/package-tree.html
+* doc/com/friendlyarm/LEDDemo/package-use.html
+* doc/constant-values.html
+* doc/deprecated-list.html
+* doc/help-doc.html
+* doc/index-files/
+* doc/index-files/index-1.html
+* doc/index-files/index-2.html
+* doc/index-files/index-3.html
+* doc/index.html
+* doc/overview-tree.html
+* doc/package-list
+* doc/resources/
+* doc/resources/background.gif
+* doc/resources/tab.gif
+* doc/resources/titlebar.gif
+* doc/resources/titlebar_end.gif
+* doc/stylesheet.css
+* proguard.cfg
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => hardware/src/main/AndroidManifest.xml
+* assets/ => hardware/src/main/assets
+* libs/armeabi/libfriendlyarm-hardware.so => hardware/src/main/jniLibs/armeabi/libfriendlyarm-hardware.so
+* res/ => hardware/src/main/res/
+* src/ => hardware/src/main/java/
+* src/.DS_Store => hardware/src/main/resources/.DS_Store
+* src/com/.DS_Store => hardware/src/main/resources/com/.DS_Store
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

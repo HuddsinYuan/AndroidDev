@@ -36,4 +36,5 @@
 
     <string name="fluid_quantity">输入流量</string>
     <string name="way_sel">正/反向</string>
+    <string name="title_activity_simple_setting_view">SimpleSettingView</string>
 </resources>

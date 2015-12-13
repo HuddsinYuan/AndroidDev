@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_settings"
+        android:title="@string/menu_settings"
+        android:orderInCategory="100" />
+</menu>
+<!-- From: file:/Users/Jonassen/Project/AndroidDev/PumpController/gpiodriver/src/main/res/menu/main.xml --><!-- From: file:/Users/Jonassen/Project/AndroidDev/PumpController/gpiodriver/build/intermediates/bundles/debug/res/menu/main.xml -->
