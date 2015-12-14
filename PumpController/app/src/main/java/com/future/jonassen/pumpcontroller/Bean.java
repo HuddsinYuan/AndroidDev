@@ -11,16 +11,17 @@ public class Bean
     Bean()
     {
         this.id = 0;
-        this.sFlux = "a";
         this.way = false;
-        this.hasConvert = false;
+        this.flux = new Flux();
+        this.flux.iFluxUL = 0;
+        this.flux.iFluxML = 0;
     }
 
-    Bean(Bean bean) {
+    Bean(Bean bean)
+    {
         this.id = bean.id;
-        this.sFlux = bean.sFlux;
         this.way = bean.way;
-        this.hasConvert = bean.hasConvert;
+        this.flux = bean.flux;
     }
 
     Bean(int id)
@@ -28,50 +29,27 @@ public class Bean
         this.id = id;
     }
 
-    Bean(int id, String sFlux, boolean way)
+    Bean(int id, Flux flux, boolean way)
     {
         this.id = id;
-        this.sFlux = sFlux;
         this.way = way;
-        this.hasConvert = false;
+        this.flux = flux;
     }
 
-    private int convertStringToInt(String str)
+
+    public String OutputMessage()
     {
-        int u = 0;
-
-        u = Integer.parseInt(str);
-        hasConvert = true;
-        return u;
-    }
-
-    public int getsFlux(String str)
-    {
-        return convertStringToInt(sFlux);
-    }
-
-    public int getFlux()
-    {
-        if (hasConvert == true)
-        {
-            return iFlux;
-        }
-        else
-        {
-            return getsFlux(sFlux);
-        }
-    }
-
-    public String OutputMessage() {
         String str = new String();
 
-        str = String.format("id = %d, sflux = %s, way = %s, iflux = %d", id, sFlux, Boolean.valueOf(way), getFlux());
+        str = String.format("id = %d, way = %s, flux = %dml + %dul", id,
+                            String.valueOf(way), flux.iFluxML, flux.iFluxUL);
 
         return str;
     }
+
     int id;
-    String sFlux;
     boolean way;
-    int iFlux;
-    boolean hasConvert;
+    Flux flux;
 }
+
+

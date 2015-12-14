@@ -1,19 +1,15 @@
 package com.future.jonassen.pumpcontroller;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Toast;
-
-//import com.friendlyarm.AndroidSDK.HardwareControler;
-//import com.bjw.gpio.GPIOJNI;
-
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,13 +17,33 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 
+//import com.friendlyarm.AndroidSDK.HardwareControler;
+//import com.bjw.gpio.GPIOJNI;
+
+
+/*
+    EINT16  -- GPH2_0 -- DIR+
+    EINT17  -- GPH2_1 -- DIR-
+    EINT18  -- GPH2_2 -- ENB+
+    EINT19  -- GPH2_3 -- ENB-
+
+    EINT24  -- GPH3_0 -- VALVE1
+    EINT25  -- GPH3_1 -- VALVE2
+    EINT26  -- GPH3_2 -- VALVE3
+    EINT27  -- GPH3_3 -- VALVE4
+
+ */
+
 public class MainView extends Activity
 {
     private static final int REQUEST_CODE = 1;
     private static final String TAG = "Main Activity:";
     private static final String RunningStatus = "Running";
     private static final String PauseStatus = "Pause";
-//    private static
+
+    private static final int ML_TASK = 10001;
+    private static final int UL_TASK = 10002;
+
 
     private Button btnSet;
     private Button btnStart;
@@ -52,7 +68,6 @@ public class MainView extends Activity
     private TextView tv_rt_cycle; //对应第几次循环，不大于总数的循环
     private TextView tv_rt_time; //当前步骤所需要的时间
 
-
     private static int all_total_time = 0;
     private static int all_cycle = 0;
     private static int all_single_time = 0;
@@ -63,18 +78,19 @@ public class MainView extends Activity
     private TextView tv_all_single_time;
     private TextView tv_all_water_time;
 
-    private int[] Time = new int[]{1100, 1200, 1300, 1400, 1500};
+    private Flux[] Time;
     private boolean[] Way = new boolean[]{true, false, true, false, true};
     private int[] BottleSel = new int[]{1, 2, 3, 4, 5};
 
     private LinkedHashMap<Integer, Bean> ansdata = new LinkedHashMap<>();
-    private Bean bean = new Bean();
+    private PumpControl Pump = new PumpControl();
     private int setok = 0;
 
 
     private Handler mhandler;
 
     private boolean isRun = false;
+    private boolean isStart = false;
 
 
     @Override
@@ -83,6 +99,16 @@ public class MainView extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_view);
         Log.i("-------------------", "START----------------------");
+
+        Time = new Flux[5];
+        for (int i = 0; i < 5; i++)
+        {
+            Time[i] = new Flux();
+        }
+
+        Pump.PumpIOInit();
+        Pump.PumpEnbSetting(false);
+
 
         tv_status = (TextView) findViewById(R.id.status);
         tv_rt_usr = (TextView) findViewById(R.id.data_ans_usr);
@@ -149,26 +175,46 @@ public class MainView extends Activity
                         Message m = mhandler.obtainMessage();
                         // TODO: 15/11/5 Add 1ms Message Process.
 
-                        rt_time = Time[rt_rand];
+                        rt_time = Time[rt_rand].iFluxML + Time[rt_rand].iFluxUL;
                         rt_way = Way[rt_rand];
 
 
                         Bundle bundle = new Bundle();
 
-                        m.arg1 = rt_time;
+                        m.arg1 = Time[rt_rand].iFluxML;
                         m.arg2 = rt_rand;
+                        m.what = ML_TASK;
                         bundle.putString("cycle", Integer.toString(rt_cycle));
                         bundle.putBoolean("way", rt_way);
                         m.setData(bundle);
-                        mhandler.sendMessage(m);
+                        m.sendToTarget();
                         try
                         {
-                            Thread.sleep(Time[rt_rand]);
+                            Thread.sleep(Time[rt_rand].iFluxML * 1000);
                         }
                         catch (InterruptedException ie)
                         {
                             ie.printStackTrace();
                         }
+
+                        m = mhandler.obtainMessage();
+                        m.arg1 = Time[rt_rand].iFluxUL;
+                        m.arg2 = rt_rand;
+                        m.what = UL_TASK;
+
+                        bundle.putString("cycle", Integer.toString(rt_cycle));
+                        bundle.putBoolean("way", rt_way);
+                        m.setData(bundle);
+                        m.sendToTarget();
+                        try
+                        {
+                            Thread.sleep(Time[rt_rand].iFluxUL * 1000);
+                        }
+                        catch (InterruptedException ie)
+                        {
+                            ie.printStackTrace();
+                        }
+                        Pump.PumpEnbSetting(false);
 
                         if (++rt_rand == 5)
                         {
@@ -179,6 +225,7 @@ public class MainView extends Activity
                                 if ((rt_cycle - 1) == all_cycle)
                                 {
                                     isRun = false;
+                                    tv_status.setText("Finished");
                                 }
                             }
                             else
@@ -202,35 +249,58 @@ public class MainView extends Activity
             {
                 String s = new String();
 
-                try
+                switch (m.what)
                 {
-                    if (m.getData().getBoolean("way", true) == true)
-                    {
-                        // TODO: 15/11/5 正向操作
-                        s = "";
-                        s = "抽";
+                    case ML_TASK:
+                        if (m.getData().getBoolean("way", true) == true)
+                        {
+                            s = "";
+                            s = " + 正向抽取";
+                            Pump.PumpDirSetting(true);
+                        }
+                        else
+                        {
+                            s = "";
+                            s = " + 反向抽取";
+                            Pump.PumpDirSetting(false);
+                        }
 
-                    }
-                    else if (m.getData().getBoolean("way") == false)
-                    {
-                        // TODO: 15/11/5 反向操作
-                        s = "";
-                        s = "放";
-                    }
-                    else
-                    {
-                        // TODO: 15/11/5  throw mydefined exception
-                    }
-                }
-                catch (NumberFormatException | NullPointerException nfe)
-                {
-                    nfe.printStackTrace();
-                    Log.i("handleMessage-->", "Bundle getData(\"way\") failed");
-                }
+                        tv_rt_cycle.setText(m.getData().getString("cycle"));
+                        tv_rt_time.setText(String.valueOf(m.arg1) + "ml");
+                        tv_rt_step.setText("从第" + Integer.toString(m.arg2 + 1) + "个瓶子" + s);
 
-                tv_rt_cycle.setText(m.getData().getString("cycle"));
-                tv_rt_time.setText(Integer.toString(m.arg1) + "ms");
-                tv_rt_step.setText("从第" + Integer.toString(m.arg2 + 1) + "个瓶子" + s);
+                        Pump.PumpValveSel(m.arg2);
+                        Pump.PumpEnbSetting(true);
+                        Pump.PumpFluxML();
+                        break;
+
+                    case UL_TASK:
+//                        if (m.getData().getBoolean("way", true) == true)
+//                        {
+//                            s = "";
+//                            s = " + 正向抽取";
+//                            Pump.PumpDirSetting(true);
+//                        }
+//                        else
+//                        {
+//                            s = "";
+//                            s = " + 反向抽取";
+//                            Pump.PumpDirSetting(false);
+//                        }
+
+                        tv_rt_cycle.setText(m.getData().getString("cycle"));
+                        tv_rt_time.setText(String.valueOf(m.arg1) + "ul");
+                        tv_rt_step.setText("从第" + Integer.toString(m.arg2 + 1) + "个瓶子" + s);
+
+//                        Pump.PumpValveSel(m.arg2);
+
+//                        Pump.PumpEnbSetting(true);
+                        Pump.PumpFluxUL();
+                        break;
+
+                    default:
+                        break;
+                }
 
                 super.handleMessage(m);
             }
@@ -265,7 +335,7 @@ public class MainView extends Activity
             {
 
                 Bean bean = new Bean(ansdata.get(i + 1));
-                Time[i] = Integer.parseInt(bean.sFlux);
+                Time[i] = bean.flux;
                 Way[i] = bean.way;
             }
 
@@ -274,9 +344,9 @@ public class MainView extends Activity
             for (int i = 0; i < ansdata.keySet().size(); i++)
             {
                 Log.i(String.valueOf(i) + " bottle",
-                      "Time: " + Time[i] + "  Way: " + Way[i]);
+                      "Time: " + Time[i].iFluxML + "ml " + Time[i].iFluxUL + "ul " + "  Way: " + Way[i]);
 
-                all_single_time = all_single_time + Time[i];
+                all_single_time = all_single_time + Time[i].iFluxUL + Time[i].iFluxML;
 
             }
 
@@ -315,8 +385,9 @@ public class MainView extends Activity
 
                 case R.id.btn_start:
                 {
-                    tv_status.setText("运行中");
+                    tv_status.setText(RunningStatus);
                     isRun = true;
+                    isStart = true;
 
                     Toast.makeText(MainView.this, "start button has been pressed",
                                    Toast.LENGTH_SHORT).show();
@@ -325,21 +396,24 @@ public class MainView extends Activity
 
                 case R.id.btn_pause:
                 {
-                    if (isRun == false)
+                    if(isStart)
                     {
-                        isRun = true;
-                        btnPause.setText("Pause");
-                        tv_status.setText(RunningStatus);
+                        if (isRun == false)
+                        {
+                            isRun = true;
+                            btnPause.setText("Pause");
+                            tv_status.setText(RunningStatus);
+                        }
+                        else
+                        {
+                            isRun = false;
+                            btnPause.setText("Resume");
+                            tv_status.setText(PauseStatus);
+                        }
+                        Log.i("isRun", "-->false");
+                        Toast.makeText(MainView.this, "pause button has been pressed",
+                                       Toast.LENGTH_SHORT).show();
                     }
-                    else
-                    {
-                        isRun = false;
-                        btnPause.setText("Resume");
-                        tv_status.setText(PauseStatus);
-                    }
-                    Log.i("isRun", "-->false");
-                    Toast.makeText(MainView.this, "pause button has been pressed",
-                                   Toast.LENGTH_SHORT).show();
                     break;
                 }
 
@@ -353,10 +427,13 @@ public class MainView extends Activity
                 case R.id.btn_stop:
                 {
                     isRun = false;
+                    isStart = false;
                     rt_rand = 0;
                     rt_cycle = 0;
 
-                    tv_rt_time.setText(Integer.toString(Time[rt_rand]) + "ms");
+                    tv_rt_time.setText(
+                            String.valueOf(Time[rt_rand].iFluxML) + "ml" + String.valueOf(
+                                    Time[rt_rand].iFluxUL) + "ul");
                     tv_rt_cycle.setText(Integer.toString(rt_cycle));
                     tv_rt_step.setText("未设置");
 
@@ -417,5 +494,6 @@ public class MainView extends Activity
             }
         }
     };
+
 
 }

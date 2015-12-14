@@ -20,11 +20,18 @@ public class SimpleSettingView extends Activity
 
     private static final int ResultCode = 1;
     private static final String TAG = new String("SimpleSettingView");
-    private EditText flux1;
-    private EditText flux2;
-    private EditText flux3;
-    private EditText flux4;
-    private EditText flux5;
+    private EditText mlflux1;
+    private EditText mlflux2;
+    private EditText mlflux3;
+    private EditText mlflux4;
+    private EditText mlflux5;
+
+    private EditText ulflux1;
+    private EditText ulflux2;
+    private EditText ulflux3;
+    private EditText ulflux4;
+    private EditText ulflux5;
+
 
     private CheckBox way1;
     private CheckBox way2;
@@ -54,11 +61,17 @@ public class SimpleSettingView extends Activity
 
     public void InitAllBottle()
     {
-        flux1 = (EditText) findViewById(R.id.flux_1);
-        flux2 = (EditText) findViewById(R.id.flux_2);
-        flux3 = (EditText) findViewById(R.id.flux_3);
-        flux4 = (EditText) findViewById(R.id.flux_4);
-        flux5 = (EditText) findViewById(R.id.flux_5);
+        ulflux1 = (EditText)findViewById(R.id.ulflux1);
+        ulflux2 = (EditText)findViewById(R.id.ulflux2);
+        ulflux3 = (EditText)findViewById(R.id.ulflux3);
+        ulflux4 = (EditText)findViewById(R.id.ulflux4);
+        ulflux5 = (EditText)findViewById(R.id.ulflux5);
+
+        mlflux1 = (EditText)findViewById(R.id.mlflux1);
+        mlflux2 = (EditText)findViewById(R.id.mlflux2);
+        mlflux3 = (EditText)findViewById(R.id.mlflux3);
+        mlflux4 = (EditText)findViewById(R.id.mlflux4);
+        mlflux5 = (EditText)findViewById(R.id.mlflux5);
 
         way1 = (CheckBox) findViewById(R.id.way_1);
         way2 = (CheckBox) findViewById(R.id.way_2);
@@ -86,33 +99,38 @@ public class SimpleSettingView extends Activity
                 {
 
                     bean1.id = 1;
-                    bean1.sFlux = flux1.getText().toString();
+                    bean1.flux.sFluxML = mlflux1.getText().toString();
+                    bean1.flux.sFluxUL = ulflux1.getText().toString();
+                    bean1.flux.convertVal();
                     bean1.way = way1.isChecked();
-                    bean1.hasConvert = false;
                     intentdata.put(1, bean1);
 
                     bean2.id = 2;
-                    bean2.sFlux = flux2.getText().toString();
+                    bean2.flux.sFluxML = mlflux2.getText().toString();
+                    bean2.flux.sFluxUL = ulflux2.getText().toString();
+                    bean2.flux.convertVal();
                     bean2.way = way2.isChecked();
-                    bean2.hasConvert = false;
                     intentdata.put(2, bean2);
 
                     bean3.id = 3;
-                    bean3.sFlux = flux3.getText().toString();
+                    bean3.flux.sFluxML = mlflux3.getText().toString();
+                    bean3.flux.sFluxUL = ulflux3.getText().toString();
+                    bean3.flux.convertVal();
                     bean3.way = way3.isChecked();
-                    bean3.hasConvert = false;
                     intentdata.put(3, bean3);
 
                     bean4.id = 4;
-                    bean4.sFlux = flux4.getText().toString();
+                    bean4.flux.sFluxML = mlflux4.getText().toString();
+                    bean4.flux.sFluxUL = ulflux4.getText().toString();
+                    bean4.flux.convertVal();
                     bean4.way = way4.isChecked();
-                    bean4.hasConvert = false;
                     intentdata.put(4, bean4);
 
                     bean5.id = 5;
-                    bean5.sFlux = flux5.getText().toString();
+                    bean5.flux.sFluxML = mlflux5.getText().toString();
+                    bean5.flux.sFluxUL = ulflux5.getText().toString();
+                    bean5.flux.convertVal();
                     bean5.way = way5.isChecked();
-                    bean5.hasConvert = false;
                     intentdata.put(5, bean5);
 
                     if (cycle.getText() == null)

@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:inputType="number"
-            android:id="@+id/flux_1"
+            android:id="@+id/mlflux1"
             android:hint="input flux"
             />
 
@@ -42,12 +42,30 @@
             android:textSize="18dp"
             />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:inputType="number"
+            android:id="@+id/ulflux1"
+            android:hint="input flux"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="ul"
+            android:textSize="18dp"
+            />
+
+
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/way_1"
             android:text="way"
-            android:padding="16dp"
+            android:padding="18dp"
 
             />
     </LinearLayout>
@@ -70,7 +88,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:inputType="number"
-            android:id="@+id/flux_2"
+            android:id="@+id/mlflux2"
             android:hint="input flux"
             />
 
@@ -82,12 +100,29 @@
             android:textSize="18dp"
             />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:inputType="number"
+            android:id="@+id/ulflux2"
+            android:hint="input flux"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="ul"
+            android:textSize="18dp"
+            />
+
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/way_2"
             android:text="way"
-            android:padding="16dp"
+            android:padding="18dp"
 
             />
     </LinearLayout>
@@ -110,7 +145,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:inputType="number"
-            android:id="@+id/flux_3"
+            android:id="@+id/mlflux3"
             android:hint="input flux"
             />
 
@@ -122,12 +157,29 @@
             android:textSize="18dp"
             />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:inputType="number"
+            android:id="@+id/ulflux3"
+            android:hint="input flux"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="ul"
+            android:textSize="18dp"
+            />
+
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/way_3"
             android:text="way"
-            android:padding="16dp"
+            android:padding="18dp"
 
             />
     </LinearLayout>
@@ -150,7 +202,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:inputType="number"
-            android:id="@+id/flux_4"
+            android:id="@+id/mlflux4"
             android:hint="input flux"
             />
 
@@ -162,12 +214,29 @@
             android:textSize="18dp"
             />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:inputType="number"
+            android:id="@+id/ulflux4"
+            android:hint="input flux"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="ul"
+            android:textSize="18dp"
+            />
+
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/way_4"
             android:text="way"
-            android:padding="16dp"
+            android:padding="18dp"
 
             />
     </LinearLayout>
@@ -190,7 +259,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:inputType="number"
-            android:id="@+id/flux_5"
+            android:id="@+id/mlflux5"
             android:hint="input flux"
             />
 
@@ -202,12 +271,29 @@
             android:textSize="18dp"
             />
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:inputType="number"
+            android:id="@+id/ulflux5"
+            android:hint="input flux"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="ul"
+            android:textSize="18dp"
+            />
+
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/way_5"
             android:text="way"
-            android:padding="16dp"
+            android:padding="18dp"
             />
     </LinearLayout>
 
