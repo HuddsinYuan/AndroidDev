@@ -15,13 +15,13 @@
     <string name="data_usr_instance">Admin</string>
     <string name="data_step">步骤:</string>
     <string name="data_cycle">循环:</string>
-    <string name="data_all_time">设定时间:</string>
+    <string name="data_all_time">抽取流量:</string>
     <string name="rt_title">染色脱色参数</string>
     <string name="rt_title_total_time">染色时间:</string>
     <string name="rt_title_water_time">水洗时间:</string>
     <string name="rt_title_cycle">脱色循环次数:</string>
     <string name="rt_title_each_time">单次脱色时间:</string>
-    <string name="testVal">测试文字</string>
+    <string name="testVal">未设定</string>
     <string name="title_activity_setting_view">SettingView</string>
 
     <string name="add_action">添加</string>

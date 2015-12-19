@@ -11,14 +11,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bjw.gpio.GPIOJNI;
+import com.friendlyarm.AndroidSDK.HardwareControler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
-
-//import com.friendlyarm.AndroidSDK.HardwareControler;
-//import com.bjw.gpio.GPIOJNI;
 
 
 /*
@@ -137,19 +136,6 @@ public class MainView extends Activity
         tv_rt_usr.setText("Admin");
         tv_status.setText(PauseStatus);
 
-//        GPIOJNI.SetCfgpin("GPH2", 0, 1); //EINT16
-//        GPIOJNI.SetCfgpin("GPH2", 1, 1); //EINT17
-//        GPIOJNI.SetCfgpin("GPH2", 2, 1); //EINT18
-//        GPIOJNI.SetCfgpin("GPH2", 3, 1); //EINT19
-//
-//        GPIOJNI.SetCfgpin("GPH3", 0, 1); //EINT24
-//        GPIOJNI.SetCfgpin("GPH3", 1, 1); //EINT25
-//        GPIOJNI.SetCfgpin("GPH3", 2, 1); //EINT26
-//        GPIOJNI.SetCfgpin("GPH3", 3, 1); //EINT27
-//
-
-//        HardwareControler.PWMStop();
-
 
         btn_test_pwm.setOnClickListener(buttonListener);
         btn_test_gpio.setOnClickListener(buttonListener);
@@ -214,9 +200,9 @@ public class MainView extends Activity
                         {
                             ie.printStackTrace();
                         }
-                        Pump.PumpEnbSetting(false);
+//                        Pump.PumpEnbSetting(false);
 
-                        if (++rt_rand == 5)
+                        if (++rt_rand == 4)
                         {
                             rt_rand = 0;
                             rt_cycle += 1;
@@ -270,23 +256,23 @@ public class MainView extends Activity
                         tv_rt_step.setText("从第" + Integer.toString(m.arg2 + 1) + "个瓶子" + s);
 
                         Pump.PumpValveSel(m.arg2);
-                        Pump.PumpEnbSetting(true);
+//                        Pump.PumpEnbSetting(true);
                         Pump.PumpFluxML();
                         break;
 
                     case UL_TASK:
-//                        if (m.getData().getBoolean("way", true) == true)
-//                        {
-//                            s = "";
-//                            s = " + 正向抽取";
+                        if (m.getData().getBoolean("way", true) == true)
+                        {
+                            s = "";
+                            s = " + 正向抽取";
 //                            Pump.PumpDirSetting(true);
-//                        }
-//                        else
-//                        {
-//                            s = "";
-//                            s = " + 反向抽取";
+                        }
+                        else
+                        {
+                            s = "";
+                            s = " + 反向抽取";
 //                            Pump.PumpDirSetting(false);
-//                        }
+                        }
 
                         tv_rt_cycle.setText(m.getData().getString("cycle"));
                         tv_rt_time.setText(String.valueOf(m.arg1) + "ul");
@@ -344,7 +330,7 @@ public class MainView extends Activity
             for (int i = 0; i < ansdata.keySet().size(); i++)
             {
                 Log.i(String.valueOf(i) + " bottle",
-                      "Time: " + Time[i].iFluxML + "ml " + Time[i].iFluxUL + "ul " + "  Way: " + Way[i]);
+                      "Time: " + Time[i].iFluxML + " ml " + Time[i].iFluxUL + "ul " + "  Way: " + Way[i]);
 
                 all_single_time = all_single_time + Time[i].iFluxUL + Time[i].iFluxML;
 
@@ -353,9 +339,9 @@ public class MainView extends Activity
             all_total_time = all_single_time * all_cycle;
 
             //设置染色脱色参数
-            tv_all_total_time.setText(String.valueOf(all_total_time));
-            tv_all_cycle.setText(String.valueOf(all_cycle));
-            tv_all_single_time.setText(String.valueOf(all_single_time));
+            tv_all_total_time.setText(String.valueOf(all_total_time) + "秒");
+            tv_all_cycle.setText(String.valueOf(all_cycle) + "次");
+            tv_all_single_time.setText(String.valueOf(all_single_time) + "秒");
             tv_all_water_time.setText("不明");
 
             rt_rand = 0;
@@ -388,6 +374,7 @@ public class MainView extends Activity
                     tv_status.setText(RunningStatus);
                     isRun = true;
                     isStart = true;
+                    Pump.PumpEnbSetting(true);
 
                     Toast.makeText(MainView.this, "start button has been pressed",
                                    Toast.LENGTH_SHORT).show();
@@ -403,11 +390,13 @@ public class MainView extends Activity
                             isRun = true;
                             btnPause.setText("Pause");
                             tv_status.setText(RunningStatus);
+                            Pump.PumpEnbSetting(true);
                         }
                         else
                         {
                             isRun = false;
                             btnPause.setText("Resume");
+                            Pump.PumpEnbSetting(false);
                             tv_status.setText(PauseStatus);
                         }
                         Log.i("isRun", "-->false");
@@ -437,6 +426,8 @@ public class MainView extends Activity
                     tv_rt_cycle.setText(Integer.toString(rt_cycle));
                     tv_rt_step.setText("未设置");
 
+                    Pump.PumpEnbSetting(false);
+
                     tv_status.setText("停止");
                     Log.i("isRun", "-->false");
                     Toast.makeText(MainView.this, "stop button has been pressed",
@@ -454,35 +445,35 @@ public class MainView extends Activity
                 case R.id.gpio1:
                 {
                     Log.i("aa", "gpio1");
-//                    if (GPIOJNI.ReadGPIO("GPH3", 3) == 1)
-//                    {
-//                        GPIOJNI.WriteGPIO("GPH3", 3, 0);
-//                    }
-//                    else
-//                    {
-//                        GPIOJNI.WriteGPIO("GPH3", 3, 1);
-//                    }
+                    if (GPIOJNI.ReadGPIO("GPH3", 3) == 1)
+                    {
+                        GPIOJNI.WriteGPIO("GPH3", 3, 0);
+                    }
+                    else
+                    {
+                        GPIOJNI.WriteGPIO("GPH3", 3, 1);
+                    }
 
                     break;
                 }
                 case R.id.led1:
                 {
                     Log.i("aa", "led1");
-//                    if (GPIOJNI.ReadGPIO("GPJ2", 0) == 1)
-//                    {
-//                        HardwareControler.setLedState(0, 1);
-//                    }
-//                    else
-//                    {
-//                        HardwareControler.setLedState(0, 0);
-//                    }
+                    if (GPIOJNI.ReadGPIO("GPJ2", 0) == 1)
+                    {
+                        HardwareControler.setLedState(0, 1);
+                    }
+                    else
+                    {
+                        HardwareControler.setLedState(0, 0);
+                    }
                     break;
                 }
 
                 case R.id.pwm1:
                 {
                     Log.i("aaa", "pwm");
-//                    HardwareControler.PWMPlay((int)(2000*1.02));
+                    HardwareControler.PWMPlay((int)(2000*1.02));
                     break;
                 }
 
