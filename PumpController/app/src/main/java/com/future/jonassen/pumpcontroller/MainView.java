@@ -111,7 +111,6 @@ public class MainView extends Activity
         {
             Time[i] = new Flux();
         }
-
         Pump.PumpIOInit();
         Pump.PumpEnbSetting(false);
 
@@ -165,105 +164,101 @@ public class MainView extends Activity
                 {
                     if (isRun)
                     {
-//                        Message m = mhandler.obtainMessage();
-
-                        rt_time = Time[rt_rand].iFluxML + Time[rt_rand].iFluxUL;
                         rt_way = Way[rt_rand];
-
-//                        Bundle bundle = new Bundle();
-
-//                        m.arg1 = Time[rt_rand].iFluxML;
-//                        m.arg2 = rt_rand;
-//                        m.what = ML_TASK;
-//                        bundle.putString("cycle", Integer.toString(rt_cycle));
-//                        bundle.putBoolean("way", rt_way);
-//                        m.setData(bundle);
-//                        m.sendToTarget();
-
-                        MyMessageSender(ML_TASK, Time[rt_rand].iFluxML, rt_rand, rt_cycle, rt_way);
                         try
                         {
                             if (!isPause)
                             {
-                                int mlTime = Time[rt_rand].iFluxML * 5;
-                                int mlTimeR = mlTime;
-                                for (; mlTime > 0 && !isPause; mlTime--)
+                                int mlTime = remainTime.iFluxML * 5;
+                                int mlTimeR = remainTime.iFluxML;
+                                int i;
+                                for (i = 0; i < mlTime && !isPause; i++)
                                 {
                                     Thread.sleep(200);
                                 }
                                 if (isPause)
                                 {
-                                    remainTime.iFluxML = mlTimeR - mlTime;
-                                    remainTime.iFluxUL = Time[rt_rand].iFluxUL;
+                                    remainTime.iFluxML = mlTimeR - i / 5;
                                     remainId = rt_rand;
+                                    Log.i("Remain", String.valueOf(
+                                            remainTime.iFluxML) + "ml" + String.valueOf(
+                                            remainTime.iFluxUL) + " ul");
                                 }
+                                else
+                                {
+                                }
+                                MyMessageSender(ML_TASK, remainTime.iFluxML, rt_rand, rt_cycle,
+                                                rt_way);
+
                             }
                         }
                         catch (InterruptedException ie)
                         {
                             ie.printStackTrace();
                         }
-
-//                        m = mhandler.obtainMessage();
-//                        m.arg1 = Time[rt_rand].iFluxUL;
-//                        m.arg2 = rt_rand;
-//                        m.what = UL_TASK;
-//
-//                        bundle.putString("cycle", Integer.toString(rt_cycle));
-//                        bundle.putBoolean("way", rt_way);
-//                        m.setData(bundle);
-//                        m.sendToTarget();
-
-
-
-                        MyMessageSender(UL_TASK, Time[rt_rand].iFluxUL, rt_rand, rt_cycle, rt_way);
-
 
                         try
                         {
-                            int ulTime = Time[rt_rand].iFluxUL * 5;
-                            int ulTimeR = ulTime;
-                            for (; ulTime > 0 && !isPause; ulTime--)
+                            if (!isPause)
                             {
-                                Thread.sleep(200);
+                                int ulTime = remainTime.iFluxUL * 5;
+                                int ulTimeR = remainTime.iFluxUL;
+                                int i;
+                                for (i = 0; i < ulTime && !isPause; i++)
+                                {
+                                    Thread.sleep(200);
+                                }
+                                if (isPause)
+                                {
+                                    remainTime.iFluxML = 0;
+                                    remainTime.iFluxUL = ulTimeR - i / 5;
+                                    remainId = rt_rand;
+                                    Log.i("Remain", String.valueOf(
+                                            remainTime.iFluxML) + "ml" + String.valueOf(
+                                            remainTime.iFluxUL) + " ul");
+                                }
+                                else
+                                {
+                                    if (++rt_rand == 4)
+                                    {
+                                        rt_rand = 0;
+                                        rt_cycle += 1;
+                                        if (setok == 1)
+                                        {
+                                            if ((rt_cycle - 1) == all_cycle)
+                                            {
+                                                isRun = false;
+                                                tv_status.setText("Finished");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (rt_cycle == 5)
+                                            {
+                                                isRun = false;
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            if (isPause)
-                            {
-                                remainId = rt_rand;
-                                remainTime.iFluxML = 0;
-                                remainTime.iFluxUL = ulTimeR - ulTime;
-                            }
+                            MyMessageSender(UL_TASK, Time[rt_rand].iFluxUL, rt_rand, rt_cycle,
+                                            rt_way);
                         }
                         catch (InterruptedException ie)
                         {
                             ie.printStackTrace();
                         }
-//                        Pump.PumpEnbSetting(false);
 
-                        if (++rt_rand == 4)
-                        {
-                            rt_rand = 0;
-                            rt_cycle += 1;
-                            if (setok == 1)
-                            {
-                                if ((rt_cycle - 1) == all_cycle)
-                                {
-                                    isRun = false;
-                                    tv_status.setText("Finished");
-                                }
-                            }
-                            else
-                            {
-                                if (rt_cycle == 5)
-                                {
-                                    isRun = false;
-                                }
-                            }
-                        }
+
+                        remainId = rt_rand;
+                        remainTime.iFluxML = Time[rt_rand].iFluxML;
+                        remainTime.iFluxUL = Time[rt_rand].iFluxUL;
                     }
                 }
             }
-        });
+        }
+
+        );
 
 
         mhandler = new Handler()
@@ -382,8 +377,13 @@ public class MainView extends Activity
             tv_all_single_time.setText(String.valueOf(all_single_time) + "秒");
             tv_all_water_time.setText("不明");
 
+
+            remainTime = Time[0];
             rt_rand = 0;
+            remainId = rt_rand;
             isRun = false;
+            isPause = false;
+            isStart = false;
             setok = 1;
         }
 
@@ -423,7 +423,7 @@ public class MainView extends Activity
                 {
                     if (isStart)
                     {
-                        if (isRun == false)
+                        if (!isRun)
                         {
                             isRun = true;
                             isPause = true;
@@ -460,9 +460,9 @@ public class MainView extends Activity
                     rt_rand = 0;
                     rt_cycle = 0;
 
-                    tv_rt_time.setText(
-                            String.valueOf(Time[rt_rand].iFluxML) + "ml" + String.valueOf(
-                                    Time[rt_rand].iFluxUL) + "ul");
+                    tv_rt_time.setText(String.valueOf(Time[rt_rand].iFluxML) + "ml" +
+                                               String.valueOf(Time[rt_rand].iFluxUL) + "ul");
+
                     tv_rt_cycle.setText(Integer.toString(rt_cycle));
                     tv_rt_step.setText("未设置");
 
@@ -526,7 +526,8 @@ public class MainView extends Activity
         }
     };
 
-    private void MyMessageSender(int TaskId, int time, int bottle, int cycle, boolean way) {
+    private void MyMessageSender(int TaskId, int time, int bottle, int cycle, boolean way)
+    {
         Message m = mhandler.obtainMessage();
         Bundle b = new Bundle();
         m.arg1 = time;
@@ -538,4 +539,16 @@ public class MainView extends Activity
         m.sendToTarget();
     }
 
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        Thread.currentThread().destroy();
+    }
 }
