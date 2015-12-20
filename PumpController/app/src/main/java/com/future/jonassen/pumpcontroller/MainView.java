@@ -96,7 +96,7 @@ public class MainView extends Activity
 
      */
     private boolean isPause = false;
-    private Flux remainTime = new Flux(0, 0);
+    private Flux remainTime = new Flux(100, 100);
     private int remainId = 0;
 
     @Override
@@ -110,10 +110,13 @@ public class MainView extends Activity
         for (int i = 0; i < 5; i++)
         {
             Time[i] = new Flux();
+            Time[i].iFluxML = 100;
+            Time[i].iFluxUL = 100;
         }
+        remainTime = Time[0];
+
         Pump.PumpIOInit();
         Pump.PumpEnbSetting(false);
-
 
         tv_status = (TextView) findViewById(R.id.status);
         tv_rt_usr = (TextView) findViewById(R.id.data_ans_usr);
@@ -133,15 +136,12 @@ public class MainView extends Activity
         btnStop = (Button) findViewById(R.id.btn_stop);
         btnEdit = (Button) findViewById(R.id.btn_edit);
 
-
         btn_test_gpio = (Button) findViewById(R.id.gpio1);
         btn_test_led = (Button) findViewById(R.id.led1);
         btn_test_pwm = (Button) findViewById(R.id.pwm1);
 
-
         tv_rt_usr.setText("Admin");
         tv_status.setText(PauseStatus);
-
 
         btn_test_pwm.setOnClickListener(buttonListener);
         btn_test_gpio.setOnClickListener(buttonListener);
@@ -165,30 +165,41 @@ public class MainView extends Activity
                     if (isRun)
                     {
                         rt_way = Way[rt_rand];
-                        try
+
+
+                        try //开始处理ML
                         {
-                            if (!isPause)
+                            if (!isPause && remainTime.iFluxML != 0)
                             {
                                 int mlTime = remainTime.iFluxML * 5;
                                 int mlTimeR = remainTime.iFluxML;
                                 int i;
+
+                                //发送电机控制信号和阀门选择信号，进行ML级别的液体抽取
+                                MyMessageSender(ML_TASK, remainTime.iFluxML, rt_rand, rt_cycle,
+                                                rt_way);
+
+
+                                //等待预设定的时间
                                 for (i = 0; i < mlTime && !isPause; i++)
                                 {
                                     Thread.sleep(200);
                                 }
-                                if (isPause)
+                                if (isPause)//按下PAUSE的瞬间，监听器会掐断电机使能
                                 {
+                                    //暂停，记录当前还剩余的ML时间和全部的UL时间，同时关闭电机
                                     remainTime.iFluxML = mlTimeR - i / 5;
                                     remainId = rt_rand;
                                     Log.i("Remain", String.valueOf(
                                             remainTime.iFluxML) + "ml" + String.valueOf(
                                             remainTime.iFluxUL) + " ul");
+//                                    Pump.PumpEnbSetting(false);
                                 }
                                 else
                                 {
+                                    remainTime.iFluxML = 0;
                                 }
-                                MyMessageSender(ML_TASK, remainTime.iFluxML, rt_rand, rt_cycle,
-                                                rt_way);
+
 
                             }
                         }
@@ -197,13 +208,18 @@ public class MainView extends Activity
                             ie.printStackTrace();
                         }
 
-                        try
+                        try //开始处理UL
                         {
                             if (!isPause)
                             {
                                 int ulTime = remainTime.iFluxUL * 5;
                                 int ulTimeR = remainTime.iFluxUL;
                                 int i;
+
+                                //然后进行UL级别的抽取，进行电机的速率控制和抽取时间及阀门选择等
+                                MyMessageSender(UL_TASK, Time[rt_rand].iFluxUL, rt_rand, rt_cycle,
+                                                rt_way);
+
                                 for (i = 0; i < ulTime && !isPause; i++)
                                 {
                                     Thread.sleep(200);
@@ -219,10 +235,19 @@ public class MainView extends Activity
                                 }
                                 else
                                 {
+                                    /*如果没暂停的话现在进行数据的更新
+
+                                     rt_rand ++  --> 阀门的递进
+                                     rt_cycle --> 循环增加，并且判定是否到了结束时间
+
+                                    */
                                     if (++rt_rand == 4)
                                     {
                                         rt_rand = 0;
                                         rt_cycle += 1;
+                                        remainTime = Time[rt_rand];
+                                        remainId = rt_rand;
+
                                         if (setok == 1)
                                         {
                                             if ((rt_cycle - 1) == all_cycle)
@@ -241,18 +266,17 @@ public class MainView extends Activity
                                     }
                                 }
                             }
-                            MyMessageSender(UL_TASK, Time[rt_rand].iFluxUL, rt_rand, rt_cycle,
-                                            rt_way);
+
                         }
                         catch (InterruptedException ie)
                         {
                             ie.printStackTrace();
                         }
 
-
-                        remainId = rt_rand;
-                        remainTime.iFluxML = Time[rt_rand].iFluxML;
-                        remainTime.iFluxUL = Time[rt_rand].iFluxUL;
+                        //结束，刷新下一个时间
+//                        remainId = rt_rand;
+//                        remainTime.iFluxML = Time[rt_rand].iFluxML;
+//                        remainTime.iFluxUL = Time[rt_rand].iFluxUL;
                     }
                 }
             }
@@ -289,6 +313,9 @@ public class MainView extends Activity
                         tv_rt_step.setText("从第" + Integer.toString(m.arg2 + 1) + "个瓶子" + s);
 
                         Pump.PumpValveSel(m.arg2);
+                        if (Pump.getPumpEnbState() == false) {
+                            Pump.PumpEnbSetting(true);
+                        }
 //                        Pump.PumpEnbSetting(true);
                         Pump.PumpFluxML();
                         break;
@@ -311,9 +338,9 @@ public class MainView extends Activity
                         tv_rt_time.setText(String.valueOf(m.arg1) + "ul");
                         tv_rt_step.setText("从第" + Integer.toString(m.arg2 + 1) + "个瓶子" + s);
 
-//                        Pump.PumpValveSel(m.arg2);
-
-//                        Pump.PumpEnbSetting(true);
+                        if (Pump.getPumpEnbState() == false) {
+                            Pump.PumpEnbSetting(true);
+                        }
                         Pump.PumpFluxUL();
                         break;
 

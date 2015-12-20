@@ -27,6 +27,8 @@ public class PumpControl
     private static final int VALVE3 = 2;
     private static final int VALVE4 = 3;
 
+
+    private boolean enablestate;
     private static final int MLFreq = (int)(29538*1.02);
     private static final int ULFreq = (int)(31*1.02);
 
@@ -79,12 +81,14 @@ public class PumpControl
     {
         if (enb)
         {
+            enablestate = enb;
             GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_P, OPEN_STATE);
             GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_N, CLOSE_STATE);
             Log.i(TAG, "Enabled");
         }
         else
         {
+            enablestate = enb;
             GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_P, OPEN_STATE);
             GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_N, OPEN_STATE);
             HardwareControler.PWMStop();
@@ -92,6 +96,11 @@ public class PumpControl
             Log.i(TAG, "Disenabled");
         }
 
+    }
+
+    public boolean getPumpEnbState()
+    {
+        return enablestate;
     }
 
     public void PumpValveSel(int num)
