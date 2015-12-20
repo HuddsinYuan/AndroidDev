@@ -47,6 +47,11 @@ public class PumpControl
         Log.i(TAG, String.format("PumpIOInit"));
     }
 
+    /*  DIR+ -->5V
+        DIR- -->GND  顺时针
+
+        ELSE  逆时针
+     */
     public void PumpDirSetting(boolean way)
     {
         if (way)
@@ -58,12 +63,18 @@ public class PumpControl
         else
         {
             GPIOJNI.WriteGPIO(CONTROL_GROUP, DIR_P, CLOSE_STATE);
-            GPIOJNI.WriteGPIO(CONTROL_GROUP, DIR_N, OPEN_STATE);
+            GPIOJNI.WriteGPIO(CONTROL_GROUP, DIR_N, CLOSE_STATE);
             Log.i(TAG, "Negative Way Setting Ok. +Way = " + String.valueOf(way));
         }
 
     }
 
+    /* ENA+ ---> 5V
+    *  ENA- ---> GND   停止
+    *
+    *
+    *  ELSE   转
+    */
     public void PumpEnbSetting(boolean enb)
     {
         if (enb)
@@ -74,7 +85,7 @@ public class PumpControl
         }
         else
         {
-            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_P, CLOSE_STATE);
+            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_P, OPEN_STATE);
             GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_N, OPEN_STATE);
             HardwareControler.PWMStop();
 

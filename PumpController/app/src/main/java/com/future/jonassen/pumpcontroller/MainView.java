@@ -91,6 +91,13 @@ public class MainView extends Activity
     private boolean isRun = false;
     private boolean isStart = false;
 
+    /*
+        是否暂停，暂停的时候记录还需要多少时间完成
+
+     */
+    private boolean isPause = false;
+    private Flux remainTime = new Flux(0, 0);
+    private int remainId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -158,43 +165,74 @@ public class MainView extends Activity
                 {
                     if (isRun)
                     {
-                        Message m = mhandler.obtainMessage();
-                        // TODO: 15/11/5 Add 1ms Message Process.
+//                        Message m = mhandler.obtainMessage();
 
                         rt_time = Time[rt_rand].iFluxML + Time[rt_rand].iFluxUL;
                         rt_way = Way[rt_rand];
 
+//                        Bundle bundle = new Bundle();
 
-                        Bundle bundle = new Bundle();
+//                        m.arg1 = Time[rt_rand].iFluxML;
+//                        m.arg2 = rt_rand;
+//                        m.what = ML_TASK;
+//                        bundle.putString("cycle", Integer.toString(rt_cycle));
+//                        bundle.putBoolean("way", rt_way);
+//                        m.setData(bundle);
+//                        m.sendToTarget();
 
-                        m.arg1 = Time[rt_rand].iFluxML;
-                        m.arg2 = rt_rand;
-                        m.what = ML_TASK;
-                        bundle.putString("cycle", Integer.toString(rt_cycle));
-                        bundle.putBoolean("way", rt_way);
-                        m.setData(bundle);
-                        m.sendToTarget();
+                        MyMessageSender(ML_TASK, Time[rt_rand].iFluxML, rt_rand, rt_cycle, rt_way);
                         try
                         {
-                            Thread.sleep(Time[rt_rand].iFluxML * 1000);
+                            if (!isPause)
+                            {
+                                int mlTime = Time[rt_rand].iFluxML * 5;
+                                int mlTimeR = mlTime;
+                                for (; mlTime > 0 && !isPause; mlTime--)
+                                {
+                                    Thread.sleep(200);
+                                }
+                                if (isPause)
+                                {
+                                    remainTime.iFluxML = mlTimeR - mlTime;
+                                    remainTime.iFluxUL = Time[rt_rand].iFluxUL;
+                                    remainId = rt_rand;
+                                }
+                            }
                         }
                         catch (InterruptedException ie)
                         {
                             ie.printStackTrace();
                         }
 
-                        m = mhandler.obtainMessage();
-                        m.arg1 = Time[rt_rand].iFluxUL;
-                        m.arg2 = rt_rand;
-                        m.what = UL_TASK;
+//                        m = mhandler.obtainMessage();
+//                        m.arg1 = Time[rt_rand].iFluxUL;
+//                        m.arg2 = rt_rand;
+//                        m.what = UL_TASK;
+//
+//                        bundle.putString("cycle", Integer.toString(rt_cycle));
+//                        bundle.putBoolean("way", rt_way);
+//                        m.setData(bundle);
+//                        m.sendToTarget();
 
-                        bundle.putString("cycle", Integer.toString(rt_cycle));
-                        bundle.putBoolean("way", rt_way);
-                        m.setData(bundle);
-                        m.sendToTarget();
+
+
+                        MyMessageSender(UL_TASK, Time[rt_rand].iFluxUL, rt_rand, rt_cycle, rt_way);
+
+
                         try
                         {
-                            Thread.sleep(Time[rt_rand].iFluxUL * 1000);
+                            int ulTime = Time[rt_rand].iFluxUL * 5;
+                            int ulTimeR = ulTime;
+                            for (; ulTime > 0 && !isPause; ulTime--)
+                            {
+                                Thread.sleep(200);
+                            }
+                            if (isPause)
+                            {
+                                remainId = rt_rand;
+                                remainTime.iFluxML = 0;
+                                remainTime.iFluxUL = ulTimeR - ulTime;
+                            }
                         }
                         catch (InterruptedException ie)
                         {
@@ -383,11 +421,12 @@ public class MainView extends Activity
 
                 case R.id.btn_pause:
                 {
-                    if(isStart)
+                    if (isStart)
                     {
                         if (isRun == false)
                         {
                             isRun = true;
+                            isPause = true;
                             btnPause.setText("Pause");
                             tv_status.setText(RunningStatus);
                             Pump.PumpEnbSetting(true);
@@ -395,6 +434,7 @@ public class MainView extends Activity
                         else
                         {
                             isRun = false;
+                            isPause = false;
                             btnPause.setText("Resume");
                             Pump.PumpEnbSetting(false);
                             tv_status.setText(PauseStatus);
@@ -473,7 +513,7 @@ public class MainView extends Activity
                 case R.id.pwm1:
                 {
                     Log.i("aaa", "pwm");
-                    HardwareControler.PWMPlay((int)(2000*1.02));
+                    HardwareControler.PWMPlay((int) (2000 * 1.02));
                     break;
                 }
 
@@ -486,5 +526,16 @@ public class MainView extends Activity
         }
     };
 
+    private void MyMessageSender(int TaskId, int time, int bottle, int cycle, boolean way) {
+        Message m = mhandler.obtainMessage();
+        Bundle b = new Bundle();
+        m.arg1 = time;
+        m.arg2 = bottle;
+        m.what = TaskId;
+        b.putBoolean("way", way);
+        b.putString("cycle", String.valueOf(cycle));
+        m.setData(b);
+        m.sendToTarget();
+    }
 
 }
