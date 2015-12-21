@@ -42,6 +42,7 @@ public class MainView extends Activity
 
     private static final int ML_TASK = 10001;
     private static final int UL_TASK = 10002;
+    private static final int END_TASK = 10003;
 
 
     private Button btnSet;
@@ -110,8 +111,8 @@ public class MainView extends Activity
         for (int i = 0; i < 5; i++)
         {
             Time[i] = new Flux();
-            Time[i].iFluxML = 100;
-            Time[i].iFluxUL = 100;
+            Time[i].iFluxML = i + 1;
+            Time[i].iFluxUL = 5 - i;
         }
         remainTime = Time[0];
 
@@ -166,10 +167,10 @@ public class MainView extends Activity
                     {
                         rt_way = Way[rt_rand];
 
-
                         try //开始处理ML
                         {
                             if (!isPause && remainTime.iFluxML != 0)
+//                            if(!isPause)
                             {
                                 int mlTime = remainTime.iFluxML * 5;
                                 int mlTimeR = remainTime.iFluxML;
@@ -178,7 +179,9 @@ public class MainView extends Activity
                                 //发送电机控制信号和阀门选择信号，进行ML级别的液体抽取
                                 MyMessageSender(ML_TASK, remainTime.iFluxML, rt_rand, rt_cycle,
                                                 rt_way);
-
+                                Log.i("MLTask",
+                                      "send + " + String.valueOf(remainTime.iFluxML) + "ml " +
+                                              String.valueOf(remainTime.iFluxUL) + "ul");
 
                                 //等待预设定的时间
                                 for (i = 0; i < mlTime && !isPause; i++)
@@ -193,7 +196,6 @@ public class MainView extends Activity
                                     Log.i("Remain", String.valueOf(
                                             remainTime.iFluxML) + "ml" + String.valueOf(
                                             remainTime.iFluxUL) + " ul");
-//                                    Pump.PumpEnbSetting(false);
                                 }
                                 else
                                 {
@@ -217,8 +219,11 @@ public class MainView extends Activity
                                 int i;
 
                                 //然后进行UL级别的抽取，进行电机的速率控制和抽取时间及阀门选择等
-                                MyMessageSender(UL_TASK, Time[rt_rand].iFluxUL, rt_rand, rt_cycle,
+                                MyMessageSender(UL_TASK, remainTime.iFluxUL, rt_rand, rt_cycle,
                                                 rt_way);
+                                Log.i("ULTask",
+                                      "send + " + String.valueOf(remainTime.iFluxML) + "ml " +
+                                              String.valueOf(remainTime.iFluxUL) + "ul");
 
                                 for (i = 0; i < ulTime && !isPause; i++)
                                 {
@@ -235,33 +240,59 @@ public class MainView extends Activity
                                 }
                                 else
                                 {
-                                    /*如果没暂停的话现在进行数据的更新
+                                    /*
+                                    如果没暂停的话现在进行数据的更新
 
                                      rt_rand ++  --> 阀门的递进
                                      rt_cycle --> 循环增加，并且判定是否到了结束时间
 
                                     */
+
                                     if (++rt_rand == 4)
                                     {
                                         rt_rand = 0;
-                                        rt_cycle += 1;
-                                        remainTime = Time[rt_rand];
-                                        remainId = rt_rand;
+                                        rt_cycle++;
 
-                                        if (setok == 1)
+                                        Log.i("Task", "finished, wait for another");
+
+//                                        if (setok == 1)
+//                                        {
+//                                            if ((rt_cycle - 1) == all_cycle)
+//                                            {
+//                                                MyMessageSender(END_TASK, 0, 0, 0, false);
+//                                            }
+//                                        }
+//                                        else
+//                                        {
+//                                            if (rt_cycle == 5)
+//                                            {
+//                                                MyMessageSender(END_TASK, 0, 0, 0, false);
+//                                            }
+//                                        }
+                                    }
+                                    remainId = rt_rand;
+                                    remainTime.iFluxML = Time[rt_rand].iFluxML;
+                                    remainTime.iFluxUL = Time[rt_rand].iFluxUL;
+                                    Log.i("OriginData",
+                                          String.valueOf(rt_rand) + "-->" + String.valueOf(
+                                                  Time[rt_rand].iFluxML) + "ml " + String.valueOf(
+                                                  Time[rt_rand].iFluxUL) + "ul");
+                                    Log.i("Data", String.valueOf(remainId) + "-->" + String.valueOf(
+                                            remainTime.iFluxML) + "ml " + String.valueOf(
+                                            remainTime.iFluxUL) + " ul");
+
+                                    if (setok == 1)
+                                    {
+                                        if ((rt_cycle - 1) == all_cycle)
                                         {
-                                            if ((rt_cycle - 1) == all_cycle)
-                                            {
-                                                isRun = false;
-                                                tv_status.setText("Finished");
-                                            }
+                                            MyMessageSender(END_TASK, 0, 0, 0, false);
                                         }
-                                        else
+                                    }
+                                    else
+                                    {
+                                        if (rt_cycle == 99)
                                         {
-                                            if (rt_cycle == 5)
-                                            {
-                                                isRun = false;
-                                            }
+                                            MyMessageSender(END_TASK, 0, 0, 0, false);
                                         }
                                     }
                                 }
@@ -313,9 +344,10 @@ public class MainView extends Activity
                         tv_rt_step.setText("从第" + Integer.toString(m.arg2 + 1) + "个瓶子" + s);
 
                         Pump.PumpValveSel(m.arg2);
-                        if (Pump.getPumpEnbState() == false) {
-                            Pump.PumpEnbSetting(true);
-                        }
+//                        if (Pump.getPumpEnbState() == false)
+//                        {
+//                            Pump.PumpEnbSetting(true);
+//                        }
 //                        Pump.PumpEnbSetting(true);
                         Pump.PumpFluxML();
                         break;
@@ -338,17 +370,27 @@ public class MainView extends Activity
                         tv_rt_time.setText(String.valueOf(m.arg1) + "ul");
                         tv_rt_step.setText("从第" + Integer.toString(m.arg2 + 1) + "个瓶子" + s);
 
-                        if (Pump.getPumpEnbState() == false) {
-                            Pump.PumpEnbSetting(true);
-                        }
+//                        if (Pump.getPumpEnbState() == false)
+//                        {
+//                            Pump.PumpEnbSetting(true);
+//                        }
                         Pump.PumpFluxUL();
+                        break;
+
+                    case END_TASK:
+                        isRun = false;
+                        isStart = false;
+                        isPause = true;
+                        tv_status.setText("Finished");
+                        Log.i("AA", "For time");
+                        Pump.PumpEnbSetting(false);
                         break;
 
                     default:
                         break;
                 }
 
-                super.handleMessage(m);
+//                super.handleMessage(m);
             }
         };
 
@@ -450,25 +492,29 @@ public class MainView extends Activity
                 {
                     if (isStart)
                     {
-                        if (!isRun)
-                        {
-                            isRun = true;
-                            isPause = true;
+                        if (isPause) //如果暂停了，那就继续
+                        {   //继续的操作
+//                            isRun = true;
+                            isPause = false;
                             btnPause.setText("Pause");
                             tv_status.setText(RunningStatus);
                             Pump.PumpEnbSetting(true);
+                            Log.i("Running State", "++" + String.valueOf(isRun));
                         }
-                        else
-                        {
-                            isRun = false;
-                            isPause = false;
+                        else //不然就暂停
+                        { // 暂停的操作
+//                            isRun = false;
+                            isPause = true;
                             btnPause.setText("Resume");
                             Pump.PumpEnbSetting(false);
                             tv_status.setText(PauseStatus);
+                            Log.i("Running State", "++" + String.valueOf(isRun));
                         }
-                        Log.i("isRun", "-->false");
                         Toast.makeText(MainView.this, "pause button has been pressed",
                                        Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(MainView.this, "the program hasn't start", Toast.LENGTH_LONG).show();
                     }
                     break;
                 }
@@ -486,6 +532,9 @@ public class MainView extends Activity
                     isStart = false;
                     rt_rand = 0;
                     rt_cycle = 0;
+                    remainId = rt_rand;
+                    remainTime.iFluxML = Time[remainId].iFluxML;
+                    remainTime.iFluxUL = Time[remainId].iFluxUL;
 
                     tv_rt_time.setText(String.valueOf(Time[rt_rand].iFluxML) + "ml" +
                                                String.valueOf(Time[rt_rand].iFluxUL) + "ul");
