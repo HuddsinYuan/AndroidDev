@@ -19,7 +19,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 
-
 /*
     EINT16  -- GPH2_0 -- DIR+
     EINT17  -- GPH2_1 -- DIR-
@@ -43,7 +42,6 @@ public class MainView extends Activity
     private static final int ML_TASK = 10001;
     private static final int UL_TASK = 10002;
     private static final int END_TASK = 10003;
-
 
     private Button btnSet;
     private Button btnStart;
@@ -78,7 +76,7 @@ public class MainView extends Activity
     private TextView tv_all_single_time;
     private TextView tv_all_water_time;
 
-    private Flux[] Time;
+    private static Flux[] Time;
     private boolean[] Way = new boolean[]{true, false, true, false, true};
     private int[] BottleSel = new int[]{1, 2, 3, 4, 5};
 
@@ -107,14 +105,23 @@ public class MainView extends Activity
         setContentView(R.layout.activity_main_view);
         Log.i("-------------------", "START----------------------");
 
-        Time = new Flux[5];
-        for (int i = 0; i < 5; i++)
+        Time = new Flux[4];
+        for (int i = 0; i < 4; i++)
         {
             Time[i] = new Flux();
-            Time[i].iFluxML = i + 1;
+            Time[i].iFluxML = 1 + i;
             Time[i].iFluxUL = 5 - i;
         }
-        remainTime = Time[0];
+
+        remainTime.iFluxML = Time[0].iFluxML;
+        remainTime.iFluxUL = Time[0].iFluxUL;
+        rt_rand = 0;
+        rt_cycle = 0;
+        remainId = rt_rand;
+        isRun = false;
+        isPause = true;
+        isStart = false;
+        printMessage();
 
         Pump.PumpIOInit();
         Pump.PumpEnbSetting(false);
@@ -165,13 +172,15 @@ public class MainView extends Activity
                 {
                     if (isRun)
                     {
-                        rt_way = Way[rt_rand];
+                        rt_way = Way[remainId];
+
 
                         try //开始处理ML
                         {
                             if (!isPause && remainTime.iFluxML != 0)
-//                            if(!isPause)
                             {
+                                Log.i("Thread", "Process ML");
+                                printMessage();
                                 int mlTime = remainTime.iFluxML * 5;
                                 int mlTimeR = remainTime.iFluxML;
                                 int i;
@@ -210,10 +219,13 @@ public class MainView extends Activity
                             ie.printStackTrace();
                         }
 
+
                         try //开始处理UL
                         {
                             if (!isPause)
                             {
+                                Log.i("Thread", "Process UL");
+                                printMessage();
                                 int ulTime = remainTime.iFluxUL * 5;
                                 int ulTimeR = remainTime.iFluxUL;
                                 int i;
@@ -238,7 +250,7 @@ public class MainView extends Activity
                                             remainTime.iFluxML) + "ml" + String.valueOf(
                                             remainTime.iFluxUL) + " ul");
                                 }
-                                else
+                                else if (!isPause && isRun)
                                 {
                                     /*
                                     如果没暂停的话现在进行数据的更新
@@ -248,6 +260,8 @@ public class MainView extends Activity
 
                                     */
 
+                                    Log.i("Thread" , "Process Done. shift rt_rand");
+                                    printMessage();
                                     if (++rt_rand == 4)
                                     {
                                         rt_rand = 0;
@@ -273,14 +287,9 @@ public class MainView extends Activity
                                     remainId = rt_rand;
                                     remainTime.iFluxML = Time[rt_rand].iFluxML;
                                     remainTime.iFluxUL = Time[rt_rand].iFluxUL;
-                                    Log.i("OriginData",
-                                          String.valueOf(rt_rand) + "-->" + String.valueOf(
-                                                  Time[rt_rand].iFluxML) + "ml " + String.valueOf(
-                                                  Time[rt_rand].iFluxUL) + "ul");
-                                    Log.i("Data", String.valueOf(remainId) + "-->" + String.valueOf(
-                                            remainTime.iFluxML) + "ml " + String.valueOf(
-                                            remainTime.iFluxUL) + " ul");
 
+                                    Log.i("Thread" , "Shift Done");
+                                    printMessage();
                                     if (setok == 1)
                                     {
                                         if ((rt_cycle - 1) == all_cycle)
@@ -419,9 +428,8 @@ public class MainView extends Activity
 
             Log.i(TAG, ansdata.toString());
 
-            for (int i = 0; i < ansdata.keySet().size(); i++)
+            for (int i = 0; i < ansdata.keySet().size() - 1; i++)
             {
-
                 Bean bean = new Bean(ansdata.get(i + 1));
                 Time[i] = bean.flux;
                 Way[i] = bean.way;
@@ -429,7 +437,7 @@ public class MainView extends Activity
 
             all_cycle = data.getIntExtra("cyc", 1);
 
-            for (int i = 0; i < ansdata.keySet().size(); i++)
+            for (int i = 0; i < ansdata.keySet().size() - 1; i++)
             {
                 Log.i(String.valueOf(i) + " bottle",
                       "Time: " + Time[i].iFluxML + " ml " + Time[i].iFluxUL + "ul " + "  Way: " + Way[i]);
@@ -447,11 +455,12 @@ public class MainView extends Activity
             tv_all_water_time.setText("不明");
 
 
-            remainTime = Time[0];
+            remainTime.iFluxML = Time[0].iFluxML;
+            remainTime.iFluxUL = Time[0].iFluxUL;
             rt_rand = 0;
             remainId = rt_rand;
             isRun = false;
-            isPause = false;
+            isPause = true;
             isStart = false;
             setok = 1;
         }
@@ -464,7 +473,6 @@ public class MainView extends Activity
         public void onClick(View v)
         {
             Button button = (Button) v;
-
 
             switch (button.getId())
             {
@@ -481,6 +489,7 @@ public class MainView extends Activity
                     tv_status.setText(RunningStatus);
                     isRun = true;
                     isStart = true;
+                    isPause = false;
                     Pump.PumpEnbSetting(true);
 
                     Toast.makeText(MainView.this, "start button has been pressed",
@@ -493,28 +502,30 @@ public class MainView extends Activity
                     if (isStart)
                     {
                         if (isPause) //如果暂停了，那就继续
-                        {   //继续的操作
+                        {   //运行的操作
 //                            isRun = true;
                             isPause = false;
                             btnPause.setText("Pause");
                             tv_status.setText(RunningStatus);
                             Pump.PumpEnbSetting(true);
-                            Log.i("Running State", "++" + String.valueOf(isRun));
+                            Log.i("Running State", "++" + String.valueOf(isPause));
                         }
                         else //不然就暂停
-                        { // 暂停的操作
+                        {   // 暂停的操作
 //                            isRun = false;
                             isPause = true;
                             btnPause.setText("Resume");
                             Pump.PumpEnbSetting(false);
                             tv_status.setText(PauseStatus);
-                            Log.i("Running State", "++" + String.valueOf(isRun));
+                            Log.i("Running State", "++" + String.valueOf(isPause));
                         }
                         Toast.makeText(MainView.this, "pause button has been pressed",
                                        Toast.LENGTH_SHORT).show();
                     }
-                    else {
-                        Toast.makeText(MainView.this, "the program hasn't start", Toast.LENGTH_LONG).show();
+                    else
+                    {
+                        Toast.makeText(MainView.this, "the program hasn't start",
+                                       Toast.LENGTH_LONG).show();
                     }
                     break;
                 }
@@ -528,24 +539,34 @@ public class MainView extends Activity
 
                 case R.id.btn_stop:
                 {
-                    isRun = false;
-                    isStart = false;
+//                    isRun = false;
+//                    isPause = true;
+//                    isStart = false;
+//                    rt_rand = 0;
+//                    rt_cycle = 0;
+//                    remainId = rt_rand;
+//                    remainTime.iFluxML = Time[0].iFluxML;
+//                    remainTime.iFluxUL = Time[0].iFluxUL;
+
+                    remainTime.iFluxML = Time[0].iFluxML;
+                    remainTime.iFluxUL = Time[0].iFluxUL;
                     rt_rand = 0;
                     rt_cycle = 0;
                     remainId = rt_rand;
-                    remainTime.iFluxML = Time[remainId].iFluxML;
-                    remainTime.iFluxUL = Time[remainId].iFluxUL;
+                    isRun = false;
+                    isPause = false;
+                    isStart = false;
 
                     tv_rt_time.setText(String.valueOf(Time[rt_rand].iFluxML) + "ml" +
                                                String.valueOf(Time[rt_rand].iFluxUL) + "ul");
 
                     tv_rt_cycle.setText(Integer.toString(rt_cycle));
-                    tv_rt_step.setText("未设置");
 
                     Pump.PumpEnbSetting(false);
 
                     tv_status.setText("停止");
-                    Log.i("isRun", "-->false");
+
+                    printMessage();
                     Toast.makeText(MainView.this, "stop button has been pressed",
                                    Toast.LENGTH_SHORT).show();
                     break;
@@ -613,6 +634,16 @@ public class MainView extends Activity
         b.putString("cycle", String.valueOf(cycle));
         m.setData(b);
         m.sendToTarget();
+    }
+
+    private void printMessage()
+    {
+        Log.i("Debug->Time", "Time[" + String.valueOf(rt_rand) + "] is " +
+                String.valueOf(Time[rt_rand].iFluxML) + "ml " + String.valueOf(
+                Time[rt_rand].iFluxUL) + "ul " +
+                "and RemainTime[" + String.valueOf(remainId) + "] is " +
+                String.valueOf(remainTime.iFluxML) + "ml " + String.valueOf(
+                remainTime.iFluxUL) + "ul");
     }
 
     @Override
