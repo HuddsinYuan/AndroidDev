@@ -288,7 +288,7 @@ public class MainView extends Activity
                                     remainTime.iFluxML = Time[rt_rand].iFluxML;
                                     remainTime.iFluxUL = Time[rt_rand].iFluxUL;
 
-                                    Log.i("Thread" , "Shift Done");
+                                    Log.i("Thread" , "Shift Done. Temp Cycle is " + String.valueOf(rt_cycle));
                                     printMessage();
                                     if (setok == 1)
                                     {

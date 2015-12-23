@@ -29,8 +29,8 @@ public class PumpControl
 
 
     private boolean enablestate;
-    private static final int MLFreq = (int)(29538*1.02);
-    private static final int ULFreq = (int)(31*1.02);
+    private static final int MLFreq = (int) (29538 * 1.02);
+    private static final int ULFreq = (int) (31 * 1.02);
 
     public void PumpIOInit()
     {
@@ -44,6 +44,20 @@ public class PumpControl
         GPIOJNI.SetCfgpin(VALVE_GROUP, VALVE3, 1);
         GPIOJNI.SetCfgpin(VALVE_GROUP, VALVE4, 1);
 
+
+
+/*
+    EINT16  -- GPH2_0 -- DIR+
+    EINT17  -- GPH2_1 -- DIR-
+    EINT18  -- GPH2_2 -- ENB+
+    EINT19  -- GPH2_3 -- ENB-
+
+    EINT24  -- GPH3_0 -- VALVE1
+    EINT25  -- GPH3_1 -- VALVE2
+    EINT26  -- GPH3_2 -- VALVE3
+    EINT27  -- GPH3_3 -- VALVE4
+
+ */
         HardwareControler.PWMStop();
 
         Log.i(TAG, String.format("PumpIOInit"));
@@ -65,7 +79,7 @@ public class PumpControl
         else
         {
             GPIOJNI.WriteGPIO(CONTROL_GROUP, DIR_P, CLOSE_STATE);
-            GPIOJNI.WriteGPIO(CONTROL_GROUP, DIR_N, CLOSE_STATE);
+            GPIOJNI.WriteGPIO(CONTROL_GROUP, DIR_N, OPEN_STATE);
             Log.i(TAG, "Negative Way Setting Ok. +Way = " + String.valueOf(way));
         }
 
@@ -82,15 +96,15 @@ public class PumpControl
         if (enb)
         {
             enablestate = enb;
-            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_P, OPEN_STATE);
-            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_N, CLOSE_STATE);
+            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_P, CLOSE_STATE);
+            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_N, OPEN_STATE);
             Log.i(TAG, "Enabled");
         }
         else
         {
             enablestate = enb;
             GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_P, OPEN_STATE);
-            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_N, OPEN_STATE);
+            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_N, CLOSE_STATE);
             HardwareControler.PWMStop();
 
             Log.i(TAG, "Disenabled");
