@@ -241,62 +241,6 @@
             />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/fifthbottle">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5th Bottle"
-            android:textSize="15dp"
-            />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:inputType="number"
-            android:id="@+id/mlflux5"
-            android:hint="input flux"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="ml"
-            android:textSize="18dp"
-            />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:inputType="number"
-            android:id="@+id/ulflux5"
-            android:hint="input flux"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="ul"
-            android:textSize="18dp"
-            />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/way_5"
-            android:text="way"
-            android:padding="18dp"
-            />
-    </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"

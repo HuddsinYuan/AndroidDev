@@ -129,10 +129,12 @@
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fuck"
-        android:layout_above="@+id/data_ans_usr"
-        android:layout_toRightOf="@+id/textView6"
-        android:layout_toEndOf="@+id/textView6"/>
+        android:text="STOP"
+        android:textSize="33sp"
+        android:layout_alignBaseline="@+id/rt_title_water_time"
+        android:layout_alignBottom="@+id/rt_title_water_time"
+        android:layout_alignRight="@+id/data_usr"
+        android:layout_alignEnd="@+id/data_usr"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -231,70 +233,40 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_start"
         android:id="@+id/btn_start"
-        android:layout_above="@+id/data_ans_cycle"
-        android:layout_toLeftOf="@+id/rt_title_each_time"
-        android:layout_toStartOf="@+id/rt_title_each_time" />
+        android:layout_alignBottom="@+id/data_ans_cycle"
+        android:layout_alignRight="@+id/rt_title_water_time"
+        android:layout_alignEnd="@+id/rt_title_water_time"
+        android:layout_marginRight="29dp"
+        android:layout_marginEnd="29dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/btn_start"
-        android:layout_toRightOf="@id/btn_start"
-        android:layout_toEndOf="@id/btn_start"
-        android:layout_marginStart="@dimen/button_margin_horizon"
-        android:layout_marginLeft="@dimen/button_margin_horizon"
         android:text="@string/btn_pause"
         android:id="@+id/btn_pause"
-        />
+        android:layout_above="@+id/data_ans_all_time"
+        android:layout_toRightOf="@+id/btn_start"
+        android:layout_toEndOf="@+id/btn_start"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/btn_start"
-        android:layout_toEndOf="@id/btn_pause"
-        android:layout_toRightOf="@id/btn_pause"
-        android:layout_marginStart="@dimen/button_margin_horizon"
-        android:layout_marginLeft="@dimen/button_margin_horizon"
-        android:text="@string/btn_ff"
-        android:id="@+id/btn_ff"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/btn_start"
-        android:layout_alignStart="@id/btn_start"
-        android:layout_below="@id/btn_start"
-        android:layout_marginTop="@dimen/button_margin_vertical"
         android:text="@string/btn_stop"
         android:id="@+id/btn_stop"
-        />
+        android:layout_alignTop="@+id/btn_set"
+        android:layout_alignLeft="@+id/btn_start"
+        android:layout_alignStart="@+id/btn_start"
+        android:layout_alignRight="@+id/btn_start"
+        android:layout_alignEnd="@+id/btn_start"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_pause"
-        android:layout_toEndOf="@id/btn_stop"
-        android:layout_toRightOf="@id/btn_stop"
-        android:layout_marginLeft="@dimen/button_margin_horizon"
-        android:layout_marginStart="@dimen/button_margin_horizon"
-        android:layout_marginTop="@dimen/button_margin_vertical"
-        android:text="@string/btn_edit"
-        android:id="@+id/btn_edit"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btn_ff"
-        android:layout_toEndOf="@id/btn_edit"
-        android:layout_toRightOf="@id/btn_ff"
-        android:layout_marginLeft="@dimen/button_margin_horizon"
-        android:layout_marginStart="@dimen/button_margin_horizon"
-        android:layout_marginTop="@dimen/button_margin_vertical"
         android:text="@string/btn_set"
         android:id="@+id/btn_set"
-        />
+        android:layout_below="@+id/data_ans_all_time"
+        android:layout_toRightOf="@+id/btn_start"
+        android:layout_toEndOf="@+id/btn_start"/>
 
 
 </RelativeLayout>

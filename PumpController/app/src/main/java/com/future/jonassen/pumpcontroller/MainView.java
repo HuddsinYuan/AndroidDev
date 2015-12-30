@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bjw.gpio.GPIOJNI;
-import com.friendlyarm.AndroidSDK.HardwareControler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -46,9 +44,7 @@ public class MainView extends Activity
     private Button btnSet;
     private Button btnStart;
     private Button btnPause;
-    private Button btnFf;
     private Button btnStop;
-    private Button btnEdit;
 
 //    private Button btn_test_gpio;
 //    private Button btn_test_led;
@@ -118,6 +114,7 @@ public class MainView extends Activity
         rt_rand = 0;
         rt_cycle = 0;
         remainId = rt_rand;
+        setok = 0;
         isRun = false;
         isPause = true;
         isStart = false;
@@ -140,9 +137,7 @@ public class MainView extends Activity
         btnSet = (Button) findViewById(R.id.btn_set);
         btnStart = (Button) findViewById(R.id.btn_start);
         btnPause = (Button) findViewById(R.id.btn_pause);
-        btnFf = (Button) findViewById(R.id.btn_ff);
         btnStop = (Button) findViewById(R.id.btn_stop);
-        btnEdit = (Button) findViewById(R.id.btn_edit);
 
 //        btn_test_gpio = (Button) findViewById(R.id.gpio1);
 //        btn_test_led = (Button) findViewById(R.id.led1);
@@ -157,9 +152,7 @@ public class MainView extends Activity
         btnSet.setOnClickListener(buttonListener);
         btnStart.setOnClickListener(buttonListener);
         btnPause.setOnClickListener(buttonListener);
-        btnFf.setOnClickListener(buttonListener);
         btnStop.setOnClickListener(buttonListener);
-        btnEdit.setOnClickListener(buttonListener);
 
 
         Thread th = new Thread(new Runnable()
@@ -260,7 +253,7 @@ public class MainView extends Activity
 
                                     */
 
-                                    Log.i("Thread" , "Process Done. shift rt_rand");
+                                    Log.i("Thread", "Process Done. shift rt_rand");
                                     printMessage();
                                     if (++rt_rand == 4)
                                     {
@@ -288,7 +281,8 @@ public class MainView extends Activity
                                     remainTime.iFluxML = Time[rt_rand].iFluxML;
                                     remainTime.iFluxUL = Time[rt_rand].iFluxUL;
 
-                                    Log.i("Thread" , "Shift Done. Temp Cycle is " + String.valueOf(rt_cycle));
+                                    Log.i("Thread",
+                                          "Shift Done. Temp Cycle is " + String.valueOf(rt_cycle));
                                     printMessage();
                                     if (setok == 1)
                                     {
@@ -387,12 +381,14 @@ public class MainView extends Activity
                         break;
 
                     case END_TASK:
+                        rt_rand = 0;
                         isRun = false;
-                        isStart = false;
                         isPause = true;
-                        tv_status.setText("Finished");
-                        Log.i("AA", "For time");
+                        isStart = false;
+
                         Pump.PumpEnbSetting(false);
+
+                        tv_status.setText("停止");
                         break;
 
                     default:
@@ -418,8 +414,6 @@ public class MainView extends Activity
 
             resetSettingValue();
 
-
-
             Log.i(TAG, line);
 
             Gson gson = new Gson();
@@ -432,18 +426,17 @@ public class MainView extends Activity
 
             Log.i(TAG, ansdata.toString());
 
-            for (int i = 0; i < ansdata.keySet().size() - 1; i++)
+            for (int i = 0; i < ansdata.keySet().size(); i++)
             {
                 Bean bean = new Bean(ansdata.get(i + 1));
-                Time[i] = bean.flux;
+                Time[i].iFluxML = bean.flux.iFluxML;
+                Time[i].iFluxUL = bean.flux.iFluxUL;
                 Way[i] = bean.way;
             }
 
             all_cycle = data.getIntExtra("cyc", 1);
 
-
-
-            for (int i = 0; i < ansdata.keySet().size() - 1; i++)
+            for (int i = 0; i < ansdata.keySet().size() ; i++)
             {
                 Log.i(String.valueOf(i) + " bottle",
                       "Time: " + Time[i].iFluxML + " ml " + Time[i].iFluxUL + "ul " + "  Way: " + Way[i]);
@@ -459,7 +452,6 @@ public class MainView extends Activity
             tv_all_cycle.setText(String.valueOf(all_cycle) + "次");
             tv_all_single_time.setText(String.valueOf(all_single_time) + "秒");
             tv_all_water_time.setText("不明");
-
 
             remainTime.iFluxML = Time[0].iFluxML;
             remainTime.iFluxUL = Time[0].iFluxUL;
@@ -536,12 +528,12 @@ public class MainView extends Activity
                     break;
                 }
 
-                case R.id.btn_ff:
-                {
-                    Toast.makeText(MainView.this, "ff button has been pressed",
-                                   Toast.LENGTH_SHORT).show();
-                    break;
-                }
+//                case R.id.btn_ff:
+//                {
+//                    Toast.makeText(MainView.this, "ff button has been pressed",
+//                                   Toast.LENGTH_SHORT).show();
+//                    break;
+//                }
 
                 case R.id.btn_stop:
                 {
@@ -563,6 +555,8 @@ public class MainView extends Activity
                     isPause = false;
                     isStart = false;
 
+//                    setok = 1;
+
                     tv_rt_time.setText(String.valueOf(Time[rt_rand].iFluxML) + "ml" +
                                                String.valueOf(Time[rt_rand].iFluxUL) + "ul");
 
@@ -578,12 +572,12 @@ public class MainView extends Activity
                     break;
                 }
 
-                case R.id.btn_edit:
-                {
-                    Toast.makeText(MainView.this, "edit button has been pressed",
-                                   Toast.LENGTH_SHORT).show();
-                    break;
-                }
+//                case R.id.btn_edit:
+//                {
+//                    Toast.makeText(MainView.this, "edit button has been pressed",
+//                                   Toast.LENGTH_SHORT).show();
+//                    break;
+//                }
 
 //                case R.id.gpio1:
 //                {
@@ -652,13 +646,15 @@ public class MainView extends Activity
                 remainTime.iFluxUL) + "ul");
     }
 
-    private void resetSettingValue() {
-        for(int i = 0; i < Time.length; i++) {
+    private void resetSettingValue()
+    {
+        for (int i = 0; i < Time.length; i++)
+        {
             Time[i].iFluxML = 0;
             Time[i].iFluxUL = 0;
         }
 
-        all_cycle = 0;
+//        all_cycle = 0;
         all_single_time = 0;
         all_total_time = 0;
         all_water_time = 0;

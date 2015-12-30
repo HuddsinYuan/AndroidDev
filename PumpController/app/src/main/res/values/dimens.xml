@@ -5,4 +5,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="button_margin_horizon">20dp</dimen>
     <dimen name="button_margin_vertical">10dp</dimen>
+    <dimen name="checkbox_padding">32dp</dimen>
 </resources>

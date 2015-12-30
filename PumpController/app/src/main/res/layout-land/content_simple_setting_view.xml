@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/firstbottle">
+        android:id="@+id/firstbottle"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,10 +64,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/way_1"
-            android:text="way"
-            android:padding="18dp"
+            android:text="@string/way_sel"
+            android:padding="@dimen/checkbox_padding"
 
-            />
+            android:layout_weight="0.26"/>
     </LinearLayout>
 
     <LinearLayout
@@ -74,7 +75,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@id/firstbottle"
-        android:id="@+id/secondbottle">
+        android:id="@+id/secondbottle"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -121,10 +123,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/way_2"
-            android:text="way"
-            android:padding="18dp"
+            android:text="@string/way_sel"
+            android:padding="@dimen/checkbox_padding"
 
-            />
+            android:layout_weight="0.26"/>
     </LinearLayout>
 
     <LinearLayout
@@ -132,7 +134,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@id/secondbottle"
-        android:id="@+id/thirdbottle">
+        android:id="@+id/thirdbottle"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -179,10 +182,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/way_3"
-            android:text="way"
-            android:padding="18dp"
+            android:text="@string/way_sel"
+            android:padding="@dimen/checkbox_padding"
 
-            />
+            android:layout_weight="0.26"/>
     </LinearLayout>
 
     <LinearLayout
@@ -190,7 +193,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@id/thirdbottle"
-        android:id="@+id/fourthbottle">
+        android:id="@+id/fourthbottle"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -237,69 +241,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/way_4"
-            android:text="way"
-            android:padding="18dp"
+            android:text="@string/way_sel"
+            android:padding="@dimen/checkbox_padding"
 
-            />
+            android:layout_weight="0.27"/>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/fourthbottle"
-        android:id="@+id/fifthbottle">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5th Bottle"
-            android:textSize="15dp"
-            />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:inputType="number"
-            android:id="@+id/mlflux5"
-            android:hint="input flux"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="ml"
-            android:textSize="18dp"
-            />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:inputType="number"
-            android:id="@+id/ulflux5"
-            android:hint="input flux"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="ul"
-            android:textSize="18dp"
-            />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/way_5"
-            android:text="way"
-            android:padding="18dp"
-            />
-    </LinearLayout>
-
 
     <Button
         android:layout_width="wrap_content"
@@ -319,7 +265,7 @@
 
 
         android:textSize="30dp"
-        android:layout_below="@+id/fifthbottle"
+        android:layout_below="@+id/fourthbottle"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="38dp"
