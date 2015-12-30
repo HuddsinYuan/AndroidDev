@@ -29,6 +29,11 @@ public class PumpControl
 
 
     private boolean enablestate;
+
+    private static final int MLFreq_Inc1 = 5000;
+    private static final int MLFreq_Inc2 = 10000;
+    private static final int MLFreq_Inc3 = 15000;
+    private static final int MLFreq_Inc4 = 20000;
     private static final int MLFreq = (int) (29538 * 1.02);
     private static final int ULFreq = (int) (31 * 1.02);
 
@@ -145,17 +150,30 @@ public class PumpControl
 
     }
 
+//    public void PumpFluxML()
+//    {
+//        HardwareControler.PWMStop();
+//
+//        HardwareControler.PWMPlay(2000);
+//        GPIOJNI.uPause(1000);
+//        HardwareControler.PWMPlay(4000);
+//        GPIOJNI.uPause(1000);
+//        HardwareControler.PWMPlay(6000);
+//        Log.i(TAG, "PumpFluxML");
+//    }
+
+
     public void PumpFluxML()
     {
         HardwareControler.PWMStop();
 
-        HardwareControler.PWMPlay(5000);
+        HardwareControler.PWMPlay(MLFreq_Inc1);
         GPIOJNI.uPause(1000);
-        HardwareControler.PWMPlay(10000);
+        HardwareControler.PWMPlay(MLFreq_Inc2);
         GPIOJNI.uPause(1000);
-        HardwareControler.PWMPlay(15000);
+        HardwareControler.PWMPlay(MLFreq_Inc3);
         GPIOJNI.uPause(1000);
-        HardwareControler.PWMPlay(25000);
+        HardwareControler.PWMPlay(MLFreq_Inc4);
         GPIOJNI.uPause(1000);
         HardwareControler.PWMPlay(MLFreq);
         Log.i(TAG, "PumpFluxML");

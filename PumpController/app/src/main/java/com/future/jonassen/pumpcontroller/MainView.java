@@ -50,9 +50,9 @@ public class MainView extends Activity
     private Button btnStop;
     private Button btnEdit;
 
-    private Button btn_test_gpio;
-    private Button btn_test_led;
-    private Button btn_test_pwm;
+//    private Button btn_test_gpio;
+//    private Button btn_test_led;
+//    private Button btn_test_pwm;
 
     public TextView tv_status;
 
@@ -144,16 +144,16 @@ public class MainView extends Activity
         btnStop = (Button) findViewById(R.id.btn_stop);
         btnEdit = (Button) findViewById(R.id.btn_edit);
 
-        btn_test_gpio = (Button) findViewById(R.id.gpio1);
-        btn_test_led = (Button) findViewById(R.id.led1);
-        btn_test_pwm = (Button) findViewById(R.id.pwm1);
+//        btn_test_gpio = (Button) findViewById(R.id.gpio1);
+//        btn_test_led = (Button) findViewById(R.id.led1);
+//        btn_test_pwm = (Button) findViewById(R.id.pwm1);
 
         tv_rt_usr.setText("Admin");
         tv_status.setText(PauseStatus);
 
-        btn_test_pwm.setOnClickListener(buttonListener);
-        btn_test_gpio.setOnClickListener(buttonListener);
-        btn_test_led.setOnClickListener(buttonListener);
+//        btn_test_pwm.setOnClickListener(buttonListener);
+//        btn_test_gpio.setOnClickListener(buttonListener);
+//        btn_test_led.setOnClickListener(buttonListener);
         btnSet.setOnClickListener(buttonListener);
         btnStart.setOnClickListener(buttonListener);
         btnPause.setOnClickListener(buttonListener);
@@ -292,7 +292,7 @@ public class MainView extends Activity
                                     printMessage();
                                     if (setok == 1)
                                     {
-                                        if ((rt_cycle - 1) == all_cycle)
+                                        if (rt_cycle == all_cycle)
                                         {
                                             MyMessageSender(END_TASK, 0, 0, 0, false);
                                         }
@@ -416,6 +416,10 @@ public class MainView extends Activity
 
             String line = data.getStringExtra("val");
 
+            resetSettingValue();
+
+
+
             Log.i(TAG, line);
 
             Gson gson = new Gson();
@@ -436,6 +440,8 @@ public class MainView extends Activity
             }
 
             all_cycle = data.getIntExtra("cyc", 1);
+
+
 
             for (int i = 0; i < ansdata.keySet().size() - 1; i++)
             {
@@ -579,40 +585,40 @@ public class MainView extends Activity
                     break;
                 }
 
-                case R.id.gpio1:
-                {
-                    Log.i("aa", "gpio1");
-                    if (GPIOJNI.ReadGPIO("GPH3", 3) == 1)
-                    {
-                        GPIOJNI.WriteGPIO("GPH3", 3, 0);
-                    }
-                    else
-                    {
-                        GPIOJNI.WriteGPIO("GPH3", 3, 1);
-                    }
-
-                    break;
-                }
-                case R.id.led1:
-                {
-                    Log.i("aa", "led1");
-                    if (GPIOJNI.ReadGPIO("GPJ2", 0) == 1)
-                    {
-                        HardwareControler.setLedState(0, 1);
-                    }
-                    else
-                    {
-                        HardwareControler.setLedState(0, 0);
-                    }
-                    break;
-                }
-
-                case R.id.pwm1:
-                {
-                    Log.i("aaa", "pwm");
-                    HardwareControler.PWMPlay((int) (2000 * 1.02));
-                    break;
-                }
+//                case R.id.gpio1:
+//                {
+//                    Log.i("aa", "gpio1");
+//                    if (GPIOJNI.ReadGPIO("GPH3", 3) == 1)
+//                    {
+//                        GPIOJNI.WriteGPIO("GPH3", 3, 0);
+//                    }
+//                    else
+//                    {
+//                        GPIOJNI.WriteGPIO("GPH3", 3, 1);
+//                    }
+//
+//                    break;
+//                }
+//                case R.id.led1:
+//                {
+//                    Log.i("aa", "led1");
+//                    if (GPIOJNI.ReadGPIO("GPJ2", 0) == 1)
+//                    {
+//                        HardwareControler.setLedState(0, 1);
+//                    }
+//                    else
+//                    {
+//                        HardwareControler.setLedState(0, 0);
+//                    }
+//                    break;
+//                }
+//
+//                case R.id.pwm1:
+//                {
+//                    Log.i("aaa", "pwm");
+//                    HardwareControler.PWMPlay((int) (2000 * 1.02));
+//                    break;
+//                }
 
                 default:
                 {
@@ -644,6 +650,18 @@ public class MainView extends Activity
                 "and RemainTime[" + String.valueOf(remainId) + "] is " +
                 String.valueOf(remainTime.iFluxML) + "ml " + String.valueOf(
                 remainTime.iFluxUL) + "ul");
+    }
+
+    private void resetSettingValue() {
+        for(int i = 0; i < Time.length; i++) {
+            Time[i].iFluxML = 0;
+            Time[i].iFluxUL = 0;
+        }
+
+        all_cycle = 0;
+        all_single_time = 0;
+        all_total_time = 0;
+        all_water_time = 0;
     }
 
     @Override

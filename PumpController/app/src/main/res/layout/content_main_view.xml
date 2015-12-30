@@ -284,30 +284,6 @@
         android:text="@string/btn_set"
         />
 
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="gpio1"
-        android:id="@+id/gpio1"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="led1"
-        android:id="@+id/led1"
-        android:layout_below="@id/gpio1"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/pwm1"
-        android:text="pwm"
-        android:layout_below="@id/led1"
-        />
-
 </RelativeLayout>
 
 
