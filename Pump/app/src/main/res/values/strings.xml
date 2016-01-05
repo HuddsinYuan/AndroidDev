@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">PumpController</string>
+    <string name="app_name">Pump</string>
     <string name="above_all_title">全自动凝胶涂色脱色仪</string>
     <string name="action_settings">Settings</string>
     <string name="btn_start">START</string>
     <string name="btn_pause">PAUSE</string>
+    <string name="btn_resume">RESUME</string>
     <string name="btn_ff">FF</string>
     <string name="btn_stop">STOP</string>
     <string name="btn_edit">EDIT</string>

@@ -21,7 +21,7 @@ public class StatusVal {
     }
 
     public boolean isStart() {
-        OutputMessage();
+//        OutputMessage();
         return Status_isStart;
     }
 
@@ -37,7 +37,7 @@ public class StatusVal {
     }
 
     public boolean isPause() {
-        OutputMessage();
+//        OutputMessage();
         return Status_isPause;
     }
 
@@ -52,7 +52,7 @@ public class StatusVal {
     }
 
     public boolean isStop() {
-        OutputMessage();
+//        OutputMessage();
         return Status_isStop;
     }
 
