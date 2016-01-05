@@ -58,17 +58,15 @@
         android:layout_alignStart="@id/rt_title"
         android:layout_below="@id/rt_title"
         android:text="@string/rt_title_total_time"
-        />
+        android:layout_marginTop="20dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/rt_ans_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rt_title"
-        android:layout_toEndOf="@id/rt_title_total"
-        android:layout_toRightOf="@id/rt_title_total"
         android:text="@string/testVal"
-        />
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="155dp" />
 
     <TextView
         android:id="@+id/rt_title_water_time"
@@ -78,17 +76,15 @@
         android:layout_alignStart="@id/rt_title"
         android:layout_below="@id/rt_title_total"
         android:text="@string/rt_title_water_time"
-        />
+        android:layout_marginTop="20dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/rt_ans_water_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rt_ans_total"
-        android:layout_toEndOf="@id/rt_title_water_time"
-        android:layout_toRightOf="@id/rt_title_water_time"
         android:text="@string/testVal"
-        />
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="190dp" />
 
     <TextView
         android:id="@+id/rt_title_cycle"
@@ -98,17 +94,15 @@
         android:layout_alignStart="@id/rt_title"
         android:layout_below="@id/rt_title_water_time"
         android:text="@string/rt_title_cycle"
-        />
+        android:layout_marginTop="20dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/rt_ans_cycle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rt_ans_water_time"
-        android:layout_toEndOf="@id/rt_title_cycle"
-        android:layout_toRightOf="@id/rt_title_cycle"
         android:text="@string/testVal"
-        />
+        android:layout_marginLeft="220dp"
+        android:layout_marginTop="225dp" />
 
     <TextView
         android:id="@+id/rt_title_each_time"
@@ -118,17 +112,15 @@
         android:layout_alignStart="@id/rt_title"
         android:layout_below="@id/rt_title_cycle"
         android:text="@string/rt_title_each_time"
-        />
+        android:layout_marginTop="20dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/rt_ans_each_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rt_ans_cycle"
-        android:layout_toEndOf="@id/rt_title_each_time"
-        android:layout_toRightOf="@id/rt_title_each_time"
         android:text="@string/testVal"
-        />
+        android:layout_marginLeft="220dp"
+        android:layout_marginTop="260dp" />
 
 
     <TextView
@@ -238,10 +230,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_start"
+        android:layout_marginTop="34dp"
         android:layout_below="@+id/data_all_time"
         android:layout_toLeftOf="@+id/data_ans_cycle"
-        android:layout_toStartOf="@+id/data_ans_cycle"
-        android:layout_marginTop="62dp" />
+        android:layout_toStartOf="@+id/data_ans_cycle" />
 
     <Button
         android:id="@+id/btn_pause"

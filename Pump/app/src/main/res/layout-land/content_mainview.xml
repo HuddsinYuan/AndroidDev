@@ -40,95 +40,92 @@
         android:id="@+id/rt_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="24dp"
         android:text="@string/rt_title"
         android:textColor="#0000ff"
         android:textSize="18sp"
+        android:layout_marginRight="274dp"
+        android:layout_marginEnd="274dp"
         android:layout_below="@+id/above_all_title"
         android:layout_alignRight="@+id/above_all_title"
-        android:layout_alignEnd="@+id/above_all_title"
-        android:layout_marginRight="245dp"
-        android:layout_marginEnd="245dp" />
+        android:layout_alignEnd="@+id/above_all_title" />
 
     <TextView
         android:id="@+id/rt_title_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/rt_title"
-        android:layout_alignStart="@id/rt_title"
-        android:layout_below="@id/rt_title"
         android:text="@string/rt_title_total_time"
-        />
+        android:textSize="@dimen/setting_title_size"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_marginTop="120dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/rt_ans_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rt_title"
-        android:layout_toEndOf="@id/rt_title_total"
-        android:layout_toRightOf="@id/rt_title_total"
         android:text="@string/testVal"
-        />
+        android:textSize="@dimen/setting_font_size"
+        android:inputType="numberDecimal"
+        android:layout_marginLeft="650dp"
+        android:layout_marginTop="110dp" />
 
     <TextView
         android:id="@+id/rt_title_water_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/rt_title"
-        android:layout_alignStart="@id/rt_title"
-        android:layout_below="@id/rt_title_total"
         android:text="@string/rt_title_water_time"
-        />
+        android:textSize="@dimen/setting_title_size"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_marginTop="160dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/rt_ans_water_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rt_ans_total"
-        android:layout_toEndOf="@id/rt_title_water_time"
-        android:layout_toRightOf="@id/rt_title_water_time"
         android:text="@string/testVal"
-        />
+        android:inputType="numberDecimal"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="650dp" />
 
     <TextView
         android:id="@+id/rt_title_cycle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/rt_title"
-        android:layout_alignStart="@id/rt_title"
-        android:layout_below="@id/rt_title_water_time"
         android:text="@string/rt_title_cycle"
-        />
+        android:textSize="@dimen/setting_title_size"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_marginTop="200dp" />
 
-    <TextView
+
+    <EditText
         android:id="@+id/rt_ans_cycle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rt_ans_water_time"
-        android:layout_toEndOf="@id/rt_title_cycle"
-        android:layout_toRightOf="@id/rt_title_cycle"
         android:text="@string/testVal"
-        />
+        android:inputType="numberDecimal"
+        android:layout_marginTop="190dp"
+        android:layout_marginLeft="690dp" />
 
     <TextView
         android:id="@+id/rt_title_each_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/rt_title"
-        android:layout_alignStart="@id/rt_title"
-        android:layout_below="@id/rt_title_cycle"
         android:text="@string/rt_title_each_time"
-        />
+        android:textSize="@dimen/setting_title_size"
+        android:layout_marginTop="240dp"
+        android:layout_alignStart="@id/rt_title" />
 
-    <TextView
+    <EditText
         android:id="@+id/rt_ans_each_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rt_ans_cycle"
-        android:layout_toEndOf="@id/rt_title_each_time"
-        android:layout_toRightOf="@id/rt_title_each_time"
         android:text="@string/testVal"
-        />
+        android:layout_alignTop="@+id/tvtest1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="230dp"
+        android:layout_marginLeft="690dp" />
 
 
     <TextView
@@ -157,12 +154,8 @@
         android:text="@string/data_title"
         android:textColor="#0000ff"
         android:textSize="18sp"
-        android:layout_marginLeft="126dp"
-        android:layout_marginStart="126dp"
-        android:layout_below="@+id/rt_title_each_time"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="81dp" />
+        android:layout_marginTop="350dp"
+        android:layout_marginLeft="100dp" />
 
 
     <TextView
@@ -172,7 +165,7 @@
         android:layout_above="@id/data_usr"
         android:layout_toEndOf="@id/textView"
         android:layout_toRightOf="@id/textView"
-        android:text="Fuck"
+        android:text="pause"
         />
 
     <TextView
@@ -240,9 +233,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_start"
-        android:layout_alignTop="@+id/status"
-        android:layout_alignLeft="@+id/rt_title_each_time"
-        android:layout_alignStart="@+id/rt_title_each_time" />
+        android:layout_marginLeft="500dp"
+        android:layout_marginTop="350dp" />
 
     <Button
         android:id="@+id/btn_pause"
@@ -260,12 +252,11 @@
         android:id="@+id/btn_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/btn_start"
-        android:layout_alignStart="@id/btn_start"
-        android:layout_below="@id/btn_start"
-        android:layout_marginTop="@dimen/button_margin_vertical"
         android:text="@string/btn_stop"
-        />
+        android:layout_below="@+id/btn_start"
+        android:layout_alignLeft="@+id/btn_start"
+        android:layout_alignStart="@+id/btn_start"
+        android:layout_marginTop="@dimen/button_margin_vertical" />
 
     <Button
         android:id="@+id/btn_set"

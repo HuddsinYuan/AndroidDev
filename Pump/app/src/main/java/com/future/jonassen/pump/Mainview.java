@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.util.Objects;
+
+import javax.security.auth.login.LoginException;
 
 @SuppressWarnings("NullArgumentToVariableArgMethod")
 public class Mainview extends Activity {
@@ -31,11 +34,24 @@ public class Mainview extends Activity {
     private static final int STATE_PAUSE = 30001;
     private static final int STATE_RESUME = 30002;
 
+    private static final int STEP_COLOR = 40001;
+    private static final int STEP_WASH = 40002;
+    private static final int STEP_DECOLOR = 40003;
 
     private Button btnStart;
     private Button btnPause;
     private Button btnStop;
     private Button btnSet;
+
+    private EditText etColorTime;
+    private EditText etWaterTime;
+    private EditText etCycle;
+    private EditText etEachTime;
+
+    private int iColorTime;
+    private int iWaterTime;
+    private int iCycle;
+    private int iEachTime;
 
     /*
         为了测试添加
@@ -126,6 +142,11 @@ public class Mainview extends Activity {
         btnSet = (Button) findViewById(R.id.btn_set);
         tvTest1 = (TextView) findViewById(R.id.tvtest1);
         tvTest2 = (TextView) findViewById(R.id.tvtest2);
+        etColorTime = (EditText) findViewById(R.id.rt_ans_total);
+        etWaterTime = (EditText) findViewById(R.id.rt_ans_water_time);
+        etCycle = (EditText) findViewById(R.id.rt_ans_cycle);
+        etEachTime = (EditText) findViewById(R.id.rt_ans_each_time);
+
         /*
             设置监听器
          */
@@ -181,6 +202,16 @@ public class Mainview extends Activity {
                     statusVal.Start();
                     break;
                 case R.id.btn_set:
+                    iColorTime = Integer.parseInt(etColorTime.getText().toString());
+                    iWaterTime = Integer.parseInt(etWaterTime.getText().toString());
+                    iCycle = Integer.parseInt(etCycle.getText().toString());
+                    iEachTime = Integer.parseInt(etEachTime.getText().toString());
+
+                    Log.i("iColorTime", String.valueOf(iColorTime));
+                    Log.i("iWaterTime", String.valueOf(iWaterTime));
+                    Log.i("iCycle", String.valueOf(iCycle));
+                    Log.i("iEachTime", String.valueOf(iEachTime));
+
                     Toast.makeText(Mainview.this, "SET BUTTON", Toast.LENGTH_LONG).show();
                     break;
                 case R.id.btn_pause:
