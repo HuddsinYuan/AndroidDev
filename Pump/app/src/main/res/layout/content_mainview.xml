@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16sp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainView">
+
+    <TextView
+        android:id="@+id/above_all_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/above_all_title"
+        android:textColor="#ff0000"
+        android:textSize="45sp"
+        />
+
+    <TextView
+        android:id="@+id/rt_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rt_title"
+        android:textColor="#0000ff"
+        android:textSize="18sp"
+        android:layout_below="@+id/above_all_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/rt_title_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/rt_title"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_below="@id/rt_title"
+        android:text="@string/rt_title_total_time"
+        />
+
+    <TextView
+        android:id="@+id/rt_ans_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rt_title"
+        android:layout_toEndOf="@id/rt_title_total"
+        android:layout_toRightOf="@id/rt_title_total"
+        android:text="@string/testVal"
+        />
+
+    <TextView
+        android:id="@+id/rt_title_water_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/rt_title"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_below="@id/rt_title_total"
+        android:text="@string/rt_title_water_time"
+        />
+
+    <TextView
+        android:id="@+id/rt_ans_water_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rt_ans_total"
+        android:layout_toEndOf="@id/rt_title_water_time"
+        android:layout_toRightOf="@id/rt_title_water_time"
+        android:text="@string/testVal"
+        />
+
+    <TextView
+        android:id="@+id/rt_title_cycle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/rt_title"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_below="@id/rt_title_water_time"
+        android:text="@string/rt_title_cycle"
+        />
+
+    <TextView
+        android:id="@+id/rt_ans_cycle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rt_ans_water_time"
+        android:layout_toEndOf="@id/rt_title_cycle"
+        android:layout_toRightOf="@id/rt_title_cycle"
+        android:text="@string/testVal"
+        />
+
+    <TextView
+        android:id="@+id/rt_title_each_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/rt_title"
+        android:layout_alignStart="@id/rt_title"
+        android:layout_below="@id/rt_title_cycle"
+        android:text="@string/rt_title_each_time"
+        />
+
+    <TextView
+        android:id="@+id/rt_ans_each_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rt_ans_cycle"
+        android:layout_toEndOf="@id/rt_title_each_time"
+        android:layout_toRightOf="@id/rt_title_each_time"
+        android:text="@string/testVal"
+        />
+
+
+    <TextView
+        android:id="@+id/data_usr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_below="@+id/textView"
+        android:text="@string/data_usr"/>
+
+    <TextView
+        android:id="@+id/data_ans_usr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/data_usr"
+        android:layout_toEndOf="@id/data_usr"
+        android:layout_toRightOf="@id/data_usr"
+        android:text="@string/testVal"
+        />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/data_title"
+        android:textColor="#0000ff"
+        android:textSize="18sp"
+        android:layout_below="@+id/rt_title_each_time"
+        android:layout_alignLeft="@+id/rt_title_each_time"
+        android:layout_alignStart="@+id/rt_title_each_time"
+        android:layout_marginTop="20dp" />
+
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/data_usr"
+        android:layout_toEndOf="@id/textView"
+        android:layout_toRightOf="@id/textView"
+        android:text="Fuck"
+        />
+
+    <TextView
+        android:id="@+id/data_step"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/data_usr"
+        android:layout_alignStart="@id/data_usr"
+        android:layout_below="@id/data_usr"
+        android:text="@string/data_step"
+        />
+
+    <TextView
+        android:id="@+id/data_ans_step"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/data_step"
+        android:layout_toEndOf="@id/data_step"
+        android:layout_toRightOf="@id/data_step"
+        android:text="@string/testVal"
+        />
+
+    <TextView
+        android:id="@+id/data_cycle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/data_usr"
+        android:layout_alignStart="@id/data_usr"
+        android:layout_below="@id/data_step"
+        android:text="@string/data_cycle"
+        />
+
+    <TextView
+        android:id="@+id/data_ans_cycle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/data_cycle"
+        android:layout_toEndOf="@id/data_cycle"
+        android:layout_toRightOf="@id/data_cycle"
+        android:text="@string/testVal"
+        />
+
+    <TextView
+        android:id="@+id/data_all_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/data_usr"
+        android:layout_alignStart="@id/data_usr"
+        android:layout_below="@id/data_cycle"
+        android:text="@string/data_all_time"
+        />
+
+    <TextView
+        android:id="@+id/data_ans_all_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/data_all_time"
+        android:layout_toEndOf="@id/data_all_time"
+        android:layout_toRightOf="@id/data_all_time"
+        android:text="@string/testVal"
+        />
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_start"
+        android:layout_below="@+id/data_all_time"
+        android:layout_toLeftOf="@+id/data_ans_cycle"
+        android:layout_toStartOf="@+id/data_ans_cycle"
+        android:layout_marginTop="62dp" />
+
+    <Button
+        android:id="@+id/btn_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/btn_start"
+        android:layout_marginLeft="@dimen/button_margin_horizon"
+        android:layout_marginStart="@dimen/button_margin_horizon"
+        android:layout_toEndOf="@id/btn_start"
+        android:layout_toRightOf="@id/btn_start"
+        android:text="@string/btn_pause"
+        />
+
+    <Button
+        android:id="@+id/btn_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/btn_start"
+        android:layout_alignStart="@id/btn_start"
+        android:layout_below="@id/btn_start"
+        android:layout_marginTop="@dimen/button_margin_vertical"
+        android:text="@string/btn_stop"
+        />
+
+    <Button
+        android:id="@+id/btn_set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_set"
+        android:layout_alignTop="@+id/btn_stop"
+        android:layout_alignLeft="@+id/btn_pause"
+        android:layout_alignStart="@+id/btn_pause" />
+
+</RelativeLayout>
+
+
+
+
