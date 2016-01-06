@@ -13,12 +13,16 @@ public class StepControl {
     private static final int STEP_WASH_BACK = 40005;
     private static final int STEP_DECOLOR = 40006;
     private static final int STEP_DECOLOR_BACK = 40007;
-    private static boolean STEP_CYCLE = false;
+    private boolean STEP_CYCLE = false;
     private static boolean RunningState = true;
 
     private int iStep = STEP_COLOR;
     private int innerCycle = 0;
     public int iTotal = 5;
+
+    public int getInnerCycle() {
+        return innerCycle;
+    }
 
     public StepControl(int iTotal) {
         this.iTotal = iTotal;
@@ -56,6 +60,10 @@ public class StepControl {
         }
 
         return s;
+    }
+
+    public boolean isStepCycle() {
+        return STEP_CYCLE;
     }
 
     public void NextStep() {
