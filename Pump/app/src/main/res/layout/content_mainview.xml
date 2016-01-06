@@ -64,7 +64,6 @@
         android:id="@+id/rt_ans_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/testVal"
         android:layout_marginLeft="200dp"
         android:layout_marginTop="155dp" />
 
@@ -82,7 +81,6 @@
         android:id="@+id/rt_ans_water_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/testVal"
         android:layout_marginLeft="200dp"
         android:layout_marginTop="190dp" />
 
@@ -100,7 +98,6 @@
         android:id="@+id/rt_ans_cycle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/testVal"
         android:layout_marginLeft="220dp"
         android:layout_marginTop="225dp" />
 
@@ -118,7 +115,6 @@
         android:id="@+id/rt_ans_each_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/testVal"
         android:layout_marginLeft="220dp"
         android:layout_marginTop="260dp" />
 
@@ -266,6 +262,17 @@
         android:layout_alignTop="@+id/btn_stop"
         android:layout_alignLeft="@+id/btn_pause"
         android:layout_alignStart="@+id/btn_pause" />
+
+    <Button
+        android:id="@+id/btn_ff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_ff"
+        android:layout_alignTop="@+id/btn_set"
+        android:layout_marginLeft="@dimen/button_margin_horizon"
+        android:layout_toEndOf="@id/btn_set"
+        android:layout_toRightOf="@id/btn_set"
+        />
 
 </RelativeLayout>
 

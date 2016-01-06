@@ -117,10 +117,6 @@ public class PumpControl
 
     }
 
-    public boolean getPumpEnbState()
-    {
-        return enablestate;
-    }
 
     public void PumpValveSel(int num)
     {

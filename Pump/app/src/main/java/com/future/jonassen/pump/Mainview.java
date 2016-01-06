@@ -13,10 +13,6 @@ import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Field;
-import java.util.Objects;
-
-import javax.security.auth.login.LoginException;
 
 @SuppressWarnings("NullArgumentToVariableArgMethod")
 public class Mainview extends Activity {
@@ -30,27 +26,54 @@ public class Mainview extends Activity {
     private static final int BUTTON_START = 20001;
     private static final int BUTTON_PAUSE = 20002;
     private static final int BUTTON_STOP = 20003;
+    private static final int BUTTON_FF = 20004;
 
     private static final int STATE_PAUSE = 30001;
     private static final int STATE_RESUME = 30002;
 
-    private static final int STEP_COLOR = 40001;
-    private static final int STEP_WASH = 40002;
-    private static final int STEP_DECOLOR = 40003;
+    private static final int STEP_COLOR = 40002;
+    private static final int STEP_COLOR_BACK = 40003;
+    private static final int STEP_WASH = 40004;
+    private static final int STEP_WASH_BACK = 40005;
+    private static final int STEP_DECOLOR = 40006;
+    private static final int STEP_DECOLOR_BACK = 40007;
+
+    private static int TempStep;
+
+    /*
+        目前在染色阶段，水洗阶段，脱色阶段，需要抽取的染色液，水，脱色液的数量并不清楚，暂定 10ml 15ml 20ml
+     */
+    private static final Flux iColor = new Flux(10, 0);
+    private static final Flux iWater = new Flux(15, 0);
+    private static final Flux iDecolor = new Flux(20, 0);
+
+    /*
+        厂家默认的染色时间为120min, 水洗时间为10s, 脱色时间为10min
+     */
+    private static final int iTimeColor = 120 * 60;
+    private static final int iTimeColorReverse = iTimeColor + 2;
+    private static final int iTimeWater = 10;
+    private static final int iTimeDecolor = 10 * 60;
 
     private Button btnStart;
     private Button btnPause;
     private Button btnStop;
     private Button btnSet;
+    private Button btnFf;
+
+    private static boolean allowSetting = true;
 
     private EditText etColorTime;
     private EditText etWaterTime;
     private EditText etCycle;
     private EditText etEachTime;
 
+    /*
+        获取到用户设置的数据
+     */
     private int iColorTime;
     private int iWaterTime;
-    private int iCycle;
+    private int iCycle = 4;
     private int iEachTime;
 
     /*
@@ -66,6 +89,7 @@ public class Mainview extends Activity {
     private StatusVal statusVal;
 
     private tPumpControl pump = new tPumpControl();
+    private StepControl Step ;
 
     private Thread mainThread;
     private Thread timeThread;
@@ -81,6 +105,8 @@ public class Mainview extends Activity {
                     break;
 
                 case TASK_SETTING_DONE:
+                    Toast.makeText(Mainview.this, "SettingDone", Toast.LENGTH_SHORT).show();
+                    Step = new StepControl(iCycle);
                     break;
 
                 case TASK_END_WORK:
@@ -91,13 +117,13 @@ public class Mainview extends Activity {
                     MessageSender(TASK_TEST_WORK, 0, TASK_UL_WORK);
                     mlcounter = 0;
                     ulcounter = 0;
-
                     break;
 
                 case TASK_BUTTON_CLICK:
                     switch (msg.arg1) {
                         case BUTTON_START:
                             break;
+
                         case BUTTON_PAUSE:
                             if (msg.arg2 == STATE_PAUSE) {
                                 btnPause.setText(R.string.btn_pause);
@@ -105,8 +131,13 @@ public class Mainview extends Activity {
                                 btnPause.setText(R.string.btn_resume);
                             }
                             break;
+
                         case BUTTON_STOP:
                             break;
+
+                        case BUTTON_FF:
+                            break;
+
                     }
                     break;
 
@@ -140,12 +171,18 @@ public class Mainview extends Activity {
         btnPause = (Button) findViewById(R.id.btn_pause);
         btnStop = (Button) findViewById(R.id.btn_stop);
         btnSet = (Button) findViewById(R.id.btn_set);
+        btnFf = (Button) findViewById(R.id.btn_ff);
         tvTest1 = (TextView) findViewById(R.id.tvtest1);
         tvTest2 = (TextView) findViewById(R.id.tvtest2);
         etColorTime = (EditText) findViewById(R.id.rt_ans_total);
         etWaterTime = (EditText) findViewById(R.id.rt_ans_water_time);
         etCycle = (EditText) findViewById(R.id.rt_ans_cycle);
         etEachTime = (EditText) findViewById(R.id.rt_ans_each_time);
+
+        etColorTime.setText(String.valueOf(iTimeColor));
+        etWaterTime.setText(String.valueOf(iTimeWater));
+        etCycle.setText(String.valueOf(0));
+        etEachTime.setText(String.valueOf(iTimeDecolor));
 
         /*
             设置监听器
@@ -154,10 +191,10 @@ public class Mainview extends Activity {
         btnPause.setOnClickListener(btnListener);
         btnStop.setOnClickListener(btnListener);
         btnSet.setOnClickListener(btnListener);
+        btnFf.setOnClickListener(btnListener);
 
-
-        mainThread.start();
-        timeThread.start();
+//        mainThread.start();
+//        timeThread.start();
     }
 
     Runnable PumpControl = new Runnable() {
@@ -166,15 +203,7 @@ public class Mainview extends Activity {
             while (!Thread.currentThread().isInterrupted()) {
                 if (statusVal.isStart()) {
                     if (!statusVal.isPause()) {
-                        if (tsSwitcher) {
-                            ThreadSleep(240);
-                            mlcounter++;
-                            MessageSender(TASK_TEST_WORK, mlcounter, TASK_ML_WORK);
-                        } else {
-                            ThreadSleep(500);
-                            ulcounter++;
-                            MessageSender(TASK_TEST_WORK, ulcounter, TASK_UL_WORK);
-                        }
+    
                     }
                 }
             }
@@ -187,7 +216,6 @@ public class Mainview extends Activity {
             while (!Thread.currentThread().isInterrupted()) {
                 ThreadSleep(1000);
 
-                tsSwitcher = !tsSwitcher;
             }
         }
     };
@@ -201,19 +229,26 @@ public class Mainview extends Activity {
                 case R.id.btn_start:
                     statusVal.Start();
                     break;
+
                 case R.id.btn_set:
-                    iColorTime = Integer.parseInt(etColorTime.getText().toString());
-                    iWaterTime = Integer.parseInt(etWaterTime.getText().toString());
-                    iCycle = Integer.parseInt(etCycle.getText().toString());
-                    iEachTime = Integer.parseInt(etEachTime.getText().toString());
+                    if (allowSetting) {
+                        iColorTime = Integer.parseInt(etColorTime.getText().toString());
+                        iWaterTime = Integer.parseInt(etWaterTime.getText().toString());
+                        iCycle = Integer.parseInt(etCycle.getText().toString());
+                        iEachTime = Integer.parseInt(etEachTime.getText().toString());
 
-                    Log.i("iColorTime", String.valueOf(iColorTime));
-                    Log.i("iWaterTime", String.valueOf(iWaterTime));
-                    Log.i("iCycle", String.valueOf(iCycle));
-                    Log.i("iEachTime", String.valueOf(iEachTime));
+                        Log.i("iColorTime", String.valueOf(iColorTime));
+                        Log.i("iWaterTime", String.valueOf(iWaterTime));
+                        Log.i("iCycle", String.valueOf(iCycle));
+                        Log.i("iEachTime", String.valueOf(iEachTime));
 
-                    Toast.makeText(Mainview.this, "SET BUTTON", Toast.LENGTH_LONG).show();
+                        allowSetting = false;
+                        MessageSender(TASK_SETTING_DONE, 0, 0);
+                    } else {
+                        Toast.makeText(Mainview.this, "Setting Fail", Toast.LENGTH_SHORT).show();
+                    }
                     break;
+
                 case R.id.btn_pause:
                     if (statusVal.isPause()) {
                         statusVal.PauseSetter(false);
@@ -223,11 +258,16 @@ public class Mainview extends Activity {
                         MessageSender(TASK_BUTTON_CLICK, BUTTON_PAUSE, STATE_RESUME);
                     }
                     break;
+
                 case R.id.btn_stop:
                     statusVal.Stop();
                     MessageSender(TASK_END_WORK, 0, 0);
-//                    MessageSender();
                     break;
+
+                case R.id.btn_ff:
+                    Step.NextStep();
+                    Step.OutputMessage();
+
                 default:
                     break;
             }
