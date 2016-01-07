@@ -23,20 +23,31 @@ public class StepValueControl {
 //    private static final int STEP_DECOLOR = 40006;
 //    private static final int STEP_DECOLOR_BACK = 40007;
 
-    String s;
+
     int cycle;
-    int time;
+    int wait_time;
+    int pump_ml_time;
+    int pump_ul_time;
     int valve;
+    boolean isMLTime;
+    boolean isWaitTime;
     boolean dir;
+    boolean set_ok;
+    String s;
 
     Object lock = new Object();
 
     public StepValueControl() {
         s = "";
         cycle = 0;
-        time = 0;
+        wait_time = 0;
+        pump_ml_time = 0;
+        pump_ul_time = 0;
+        isMLTime = true;
+        isWaitTime = false;
         valve = 0;
         dir = false;
+        set_ok = false;
     }
 
 //    public void getCurrentStepParam(int currentStep) {

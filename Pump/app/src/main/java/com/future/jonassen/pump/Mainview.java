@@ -11,11 +11,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 @SuppressWarnings("NullArgumentToVariableArgMethod")
 public class Mainview extends Activity {
+
+    private static final String STRING_COLOR_STEP = "染色中";
+    private static final String STRING_COLOR_DONE = "染色结束";
+    private static final String STRING_WASH_STEP = "水洗";
+    private static final String STRING_DECOLOR_STEP = "脱色";
+
     private static final int TASK_MAIN_WORK = 10001;
     private static final int TASK_SECOND_WORK = 10002;
     private static final int TASK_END_WORK = 10003;
@@ -38,8 +46,8 @@ public class Mainview extends Activity {
     private static final int STEP_DECOLOR = 40006;
     private static final int STEP_DECOLOR_BACK = 40007;
 
-    private static int TempStep;
-    private static int TempTime;
+    private static int TempStep = 0;
+    private static int TempTime = 0;
 
     /*
         目前在染色阶段，水洗阶段，脱色阶段，需要抽取的染色液，水，脱色液的数量并不清楚，暂定 10ml 15ml 20ml
@@ -47,8 +55,8 @@ public class Mainview extends Activity {
      */
     // TODO: 16/1/6 这个具体参数需要和厂家确认
     private static final Flux iColor = new Flux(10, 0);
-    private static final Flux iWater = new Flux(15, 0);
-    private static final Flux iDecolor = new Flux(20, 0);
+    private static final Flux iWater = new Flux(20, 0);
+    private static final Flux iDecolor = new Flux(4, 0);
 
     private Button btnStart;
     private Button btnPause;
@@ -63,7 +71,7 @@ public class Mainview extends Activity {
     private EditText etCycle;
     private EditText etEachTime;
 
-
+    private TextView tvUser;
     private TextView tvStep;
     private TextView tvCycle;
     private TextView tvTime;
@@ -102,6 +110,12 @@ public class Mainview extends Activity {
     StepValueControl svc = new StepValueControl();
 
     /*
+        1秒时间到, 推动主线程的进步
+     */
+    private boolean set_ok = false;
+    private int count_time = 0;
+
+    /*
         为了测试添加
      */
     private TextView tvTest1;
@@ -114,7 +128,7 @@ public class Mainview extends Activity {
     private StatusVal statusVal;
 
     private tPumpControl pump = new tPumpControl();
-    private StepControl Step;
+    private StepControl Step = new StepControl(5);
 
     private Thread mainThread;
     private Thread timeThread;
@@ -133,6 +147,11 @@ public class Mainview extends Activity {
                     break;
 
                 case TASK_SECOND_WORK:
+                    all_time = msg.arg1;
+                    min = all_time / 60;
+                    sec = all_time % 60;
+                    tvTime.setText(String.format("%d 分 %d 秒", min, sec));
+
                     break;
 
                 case TASK_SETTING_DONE:
@@ -205,8 +224,9 @@ public class Mainview extends Activity {
         tvStep = (TextView) findViewById(R.id.data_ans_step);
         tvCycle = (TextView) findViewById(R.id.data_ans_cycle);
         tvTime = (TextView) findViewById(R.id.data_ans_all_time);
+        tvUser = (TextView) findViewById(R.id.data_ans_usr);
 
-
+        tvUser.setText("PUMP");
         etColorTime.setText(String.valueOf(iMauTimeColor));
         etWaterTime.setText(String.valueOf(iMauTimeWater));
         etCycle.setText(String.valueOf(allowSetting ? 5 : iUserCycle));
@@ -221,8 +241,7 @@ public class Mainview extends Activity {
         btnSet.setOnClickListener(btnListener);
         btnFf.setOnClickListener(btnListener);
 
-//        mainThread.start();
-//        timeThread.start();
+        timeThread.start();
     }
 
     Runnable PumpControl = new Runnable() {
@@ -241,78 +260,117 @@ public class Mainview extends Activity {
                             阀门：每一个步骤打开的阀门
                             方向：每一个步骤所需求的方向
                          */
+                        if (TempStep != Step.getStep()) {
+                            switch (Step.getStep()) {
+                                case STEP_COLOR:
+                                    synchronized (svc.lock) {
+                                        svc.s = STRING_COLOR_STEP;
+                                        svc.cycle = 1;
+                                        svc.wait_time = allowSetting ? iMauTimeColor : iUserTimeColor;
+                                        svc.pump_ml_time = iColor.iFluxML;
+                                        svc.pump_ul_time = iColor.iFluxUL;
+                                        svc.valve = 4;
+                                        svc.dir = true;
+                                        TempStep = STEP_COLOR;
+                                        TempTime = svc.pump_ml_time;
+                                        svc.isMLTime = true;
+                                        svc.isWaitTime = false;
+                                    }
+                                    break;
 
-                        switch (Step.getStep()) {
-                            case STEP_COLOR:
-                                synchronized (svc.lock) {
-                                    svc.s = String.valueOf(R.string.ColorStep);
-                                    svc.cycle = 1;
-                                    svc.time = allowSetting ? iMauTimeColor : iUserTimeColor;
-                                    svc.valve = 4;
-                                    svc.dir = true;
-                                }
-                                break;
+                                case STEP_COLOR_BACK:
+                                    synchronized (svc.lock) {
+                                        svc.s = STRING_COLOR_DONE;
+                                        svc.cycle = 0;
+                                        svc.wait_time = allowSetting ? iMauTimeColor : iUserTimeColor;
+                                        svc.pump_ml_time = iColor.iFluxML + 2;
+                                        svc.pump_ul_time = iColor.iFluxUL;
+                                        svc.valve = 4;
+                                        svc.dir = false;
+                                        TempStep = STEP_COLOR_BACK;
+                                        TempTime = svc.pump_ml_time;
+                                        svc.isMLTime = true;
+                                        svc.isWaitTime = false;
+                                    }
+                                    break;
 
-                            case STEP_COLOR_BACK:
-                                synchronized (svc.lock) {
-                                    svc.s = String.valueOf(R.string.ColorDone);
-                                    svc.cycle = 0;
-                                    svc.time = allowSetting ? iMauTimeColorReverse : iUserTimeColorReverse;
-                                    svc.valve = 4;
-                                    svc.dir = false;
-                                }
-                                break;
+                                case STEP_WASH:
+                                    synchronized (svc.lock) {
+                                        svc.s = STRING_WASH_STEP;
+                                        svc.cycle = 1;
+                                        svc.wait_time = 0; /* 在水洗的步骤中，只需要一直抽水古来将其洗干净就好，不需要等待步骤 */
+                                        svc.pump_ml_time = iWater.iFluxML;
+                                        svc.pump_ul_time = iWater.iFluxUL;
+                                        svc.valve = 3;
+                                        svc.dir = true;
+                                        TempStep = STEP_WASH;
+                                        TempTime = svc.pump_ml_time;
+                                        svc.isMLTime = true;
+                                        svc.isWaitTime = false;
+                                    }
+                                    break;
 
-                            case STEP_WASH:
-                                synchronized (svc.lock) {
-                                    svc.s = String.valueOf(R.string.WashStep);
-                                    svc.cycle = 1;
-                                    svc.time = allowSetting ? iMauTimeWater : iUserTimeWater;
-                                    svc.valve = 3;
-                                    svc.dir = true;
-                                }
-                                break;
+                                case STEP_WASH_BACK:
+                                    synchronized (svc.lock) {
+                                        svc.s = STRING_WASH_STEP;
+                                        svc.cycle = Step.isStepCycle() ? 2 : Step.getInnerCycle();
+                                        svc.wait_time = 0;
+                                        svc.pump_ml_time = iWater.iFluxML;
+                                        svc.pump_ul_time = iWater.iFluxUL;
+                                        svc.valve = 1;
+                                        svc.dir = false;
+                                        TempStep = STEP_WASH_BACK;
+                                        TempTime = svc.pump_ml_time;
+                                        svc.isMLTime = true;
+                                        svc.isWaitTime = false;
+                                    }
+                                    break;
 
-                            case STEP_WASH_BACK:
-                                synchronized (svc.lock) {
-                                    svc.s = String.valueOf(R.string.WashStep);
-                                    svc.cycle = Step.isStepCycle() ? 1 : Step.getInnerCycle();
-                                    svc.time = allowSetting ? iMauTimeWater : iUserTimeWater;
-                                    svc.valve = 1;
-                                    svc.dir = false;
-                                }
-                                break;
+                                case STEP_DECOLOR:
+                                    synchronized (svc.lock) {
+                                        svc.s = STRING_DECOLOR_STEP;
+                                        svc.cycle = Step.isStepCycle() ? 2 : Step.getInnerCycle();
+                                        svc.wait_time = allowSetting ? iMauTimeDecolor : iUserTimeDecolor;
+                                        svc.pump_ml_time = iDecolor.iFluxML; /* 脱色液的数量 */
+                                        svc.pump_ul_time = iDecolor.iFluxUL;
+                                        svc.valve = 2;
+                                        svc.dir = true;
+                                        TempStep = STEP_DECOLOR;
+                                        TempTime = svc.pump_ml_time;
+                                        svc.isMLTime = true;
+                                        svc.isWaitTime = false;
+                                    }
+                                    break;
 
-                            case STEP_DECOLOR:
-                                synchronized (svc.lock) {
-                                    svc.s = String.valueOf(R.string.Decolor);
-                                    svc.cycle = Step.isStepCycle() ? 1 : Step.getInnerCycle();
-                                    svc.time = allowSetting ? iMauTimeDecolor : iUserTimeDecolor;
-                                    svc.valve = 2;
-                                    svc.dir = true;
-                                }
-                                break;
+                                case STEP_DECOLOR_BACK:
+                                    synchronized (svc.lock) {
+                                        svc.s = STRING_DECOLOR_STEP;
+                                        svc.cycle = 1;
+                                        svc.wait_time = 0;
+                                        svc.pump_ml_time = iDecolor.iFluxML;
+                                        svc.pump_ul_time = iDecolor.iFluxML;
+                                        svc.valve = 1;
+                                        svc.dir = false;
+                                        TempStep = STEP_DECOLOR_BACK;
+                                        TempTime = svc.pump_ml_time;
+                                        svc.isMLTime = false;
+                                        svc.isWaitTime = true;
+                                    }
+                                    break;
 
-                            case STEP_DECOLOR_BACK:
-                                synchronized (svc.lock) {
-                                    svc.s = String.valueOf(R.string.Decolor);
-                                    svc.cycle = 1;
-                                    svc.time = allowSetting ? iMauTimeDecolor : iUserTimeDecolor;
-                                    svc.valve = 1;
-                                    svc.dir = true;
-                                }
-                                break;
+                                default:
+                                    break;
 
-                            default:
-                                break;
+                            }
 
-                        }
+                            set_ok = true;
 
                         /*
                             配置完毕后，发给UI线程刷新界面
                          */
-                        synchronized (svc.lock) {
-                            PumpMessageSender(svc);
+                            synchronized (svc.lock) {
+                                PumpMessageSender(svc);
+                            }
                         }
 
                         /*
@@ -322,9 +380,6 @@ public class Mainview extends Activity {
                             接下来控制阀门
                          */
 
-                        
-
-
 
                     }
                 }
@@ -333,17 +388,51 @@ public class Mainview extends Activity {
     };
 
     /*
-        处理倒计时操作
+        处理倒计时操作,只负责处理倒计时问题
      */
     Runnable SecondControl = new Runnable() {
         @Override
         public void run() {
             while (!Thread.currentThread().isInterrupted()) {
-                ThreadSleep(1000);
-                MessageSender(TASK_SECOND_WORK, svc.time, 0);
-                svc.time -- ;
-                if (svc.time == 0) {
-                    Step.NextStep();
+                if (!statusVal.isPause() && statusVal.isStart() && set_ok) {
+
+                    ThreadSleep(1000);
+
+                    if (svc.isMLTime && !svc.isWaitTime) {
+                        if (TempTime > 0) {
+                            TempTime--;
+                        } else if (TempTime == 0) {
+                            TempTime = svc.pump_ul_time;
+                            svc.isMLTime = false;
+                        }
+                        Log.i("SecondControl", "ML Work.");
+                        count_time = svc.wait_time + TempTime - svc.pump_ml_time;
+
+                    } else if (!svc.isMLTime && !svc.isWaitTime) {
+                        if (TempTime > 0) {
+                            TempTime--;
+                        } else if (TempTime == 0) {
+                            TempTime = svc.wait_time - svc.pump_ul_time - svc.pump_ml_time;
+                            svc.isWaitTime = true;
+                        }
+                        Log.i("SecondControl", "UL Work.");
+                        count_time = svc.wait_time - svc.pump_ml_time + TempTime - svc.pump_ul_time;
+
+                    } else if (svc.isWaitTime) {
+                        if (TempTime > 0) {
+                            TempTime--;
+                        } else if (TempTime == 0) {
+                            Step.NextStep();
+                            Step.OutputMessage();
+
+                            set_ok = false;
+                        }
+                        Log.i("SecondControl", "Wait Work");
+                        count_time = TempTime;
+
+                    }
+
+                    MessageSender(TASK_SECOND_WORK, count_time, 0);
                 }
             }
         }
@@ -358,6 +447,7 @@ public class Mainview extends Activity {
                 case R.id.btn_start:
                     statusVal.Start();
                     btnSet.setClickable(false);
+                    mainThread.start();
                     break;
 
                 case R.id.btn_set:
@@ -419,7 +509,7 @@ public class Mainview extends Activity {
         Bundle bundle = new Bundle();
         m.what = TASK_MAIN_WORK;
         m.arg1 = svc.cycle;
-        m.arg2 = svc.time;
+        m.arg2 = svc.wait_time;
         bundle.putInt("valve", svc.valve);
         bundle.putBoolean("dir", svc.dir);
         bundle.putString("string", svc.s);
