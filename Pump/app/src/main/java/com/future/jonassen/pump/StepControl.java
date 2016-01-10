@@ -14,7 +14,7 @@ public class StepControl {
     private static final int STEP_DECOLOR = 40006;
     private static final int STEP_DECOLOR_BACK = 40007;
     private boolean STEP_CYCLE = false;
-    private static boolean RunningState = true;
+    private boolean RunningState = true;
 
     private int iStep = STEP_COLOR;
     private int innerCycle = 0;
@@ -86,12 +86,16 @@ public class StepControl {
                 innerCycle++;
             }
 
-
+            Log.i("StepControl", "Next step is " + getStringStep());
         } else {
             RunningState = false;
             Log.i("StepControl", "Out of Cycle. Running State " + String.valueOf(RunningState));
         }
 
+    }
+
+    public boolean isRunningState() {
+        return RunningState;
     }
 
     public void OutputMessage() {

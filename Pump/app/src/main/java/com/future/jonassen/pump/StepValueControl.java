@@ -37,6 +37,21 @@ public class StepValueControl {
 
     Object lock = new Object();
 
+    public StepValueControl(StepValueControl stepValueControl) {
+        this.dir = stepValueControl.dir;
+        this.wait_time = stepValueControl.wait_time;
+        this.pump_ml_time = stepValueControl.pump_ml_time;
+        this.pump_ul_time = stepValueControl.pump_ul_time;
+        this.valve = stepValueControl.valve;
+        this.isWaitTime = stepValueControl.isWaitTime;
+        this.isMLTime = stepValueControl.isMLTime;
+        this.set_ok = stepValueControl.set_ok;
+        this.s = stepValueControl.s;
+        this.lock = stepValueControl.lock;
+        this.cycle = stepValueControl.cycle;
+    }
+
+
     public StepValueControl() {
         s = "";
         cycle = 0;
