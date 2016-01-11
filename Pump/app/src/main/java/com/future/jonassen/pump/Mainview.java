@@ -79,7 +79,8 @@ public class Mainview extends Activity {
 
     private boolean isRestarted = false;
     private boolean run_for_once = false;
-
+    private int multry_for_pumpdir = 0;
+    private static int MULTRY_FOR_PUMPDIR = 3;
     /*
         默认的厂家设置的数据
 
@@ -165,6 +166,7 @@ public class Mainview extends Activity {
 
                 case TASK_END_WORK:
                     Log.i("Handler", "End work");
+                    tvStatus.setText("结束");
                     statusVal.PauseSetter(true);
 
                     break;
@@ -407,7 +409,8 @@ public class Mainview extends Activity {
                                     synchronized (svc.lock) {
                                         svc.s = STRING_DECOLOR_STEP;
                                         svc.cycle = 1;
-                                        svc.wait_time = allowSetting ? iMauTimeDecolor : iUserTimeDecolor;;
+                                        svc.wait_time = allowSetting ? iMauTimeDecolor : iUserTimeDecolor;
+                                        ;
                                         svc.pump_ml_time = iDecolor.iFluxML; /* 脱色液的数量 */
                                         svc.pump_ul_time = iDecolor.iFluxUL;
                                         svc.valve = 1;
@@ -432,6 +435,9 @@ public class Mainview extends Activity {
                             配置完毕后，发给UI线程刷新界面
                          */
                             synchronized (svc.lock) {
+
+                                multry_for_pumpdir = 0;
+
                                 PumpMessageSender(svc);
 //                                set_ok = true;
 
@@ -479,13 +485,21 @@ public class Mainview extends Activity {
 //                    if (set_ok) {
 //                        Log.i("SecondControl", "Enter SecondControl Thread");
 
-                    pump.PumpDirSetting(svc.dir);
+
+                    /*
+                        前三秒尝试多次设置旋转方向，共尝试三次
+                     */
+                    if (multry_for_pumpdir < MULTRY_FOR_PUMPDIR) {
+                        pump.PumpDirSetting(svc.dir);
+                        multry_for_pumpdir ++;
+                    }
+
                     if (svc.isWaitTime || statusVal.isStop() || statusVal.isPause()) {
                         if (pump.getPumpEnbState()) {
                             pump.PumpEnbSetting(false);
                         }
                     } else {
-                        if (pump.getPumpEnbState() && run_for_once)  {
+                        if (pump.getPumpEnbState() && run_for_once) {
                             run_for_once = false;
                             pump.PumpValveSel(svc.valve - 1);
                             pump.PumpDirSetting(svc.dir);
@@ -517,9 +531,6 @@ public class Mainview extends Activity {
 //                    }
 
 
-
-
-
                     if (svc.isMLTime && !svc.isWaitTime) {
                         if (TempTime > 0) {
                             TempTime--;
@@ -539,6 +550,7 @@ public class Mainview extends Activity {
                         } else if (TempTime == 0) {
                             TempTime = svc.wait_time - svc.pump_ul_time - svc.pump_ml_time;
                             svc.isWaitTime = true;
+                            pump.CloseAllValve();
                         }
 
                         count_time = svc.wait_time - svc.pump_ml_time + TempTime - svc.pump_ul_time;
@@ -557,6 +569,7 @@ public class Mainview extends Activity {
                                 statusVal.Stop();
                                 btnSet.setClickable(true);
                                 pump.PumpEnbSetting(false);
+                                pump.CloseAllValve();
                                 RefreshDevice2InitState();
                                 MessageSender(TASK_END_WORK, 0, 0);
                                 MessageSender(TASK_STATUS_REFRESH, 0, 0);
@@ -570,7 +583,6 @@ public class Mainview extends Activity {
                 }
             }
         }
-//        }
     };
 
     private View.OnClickListener btnListener = new View.OnClickListener() {
@@ -616,6 +628,7 @@ public class Mainview extends Activity {
                     } else {
                         statusVal.PauseSetter(true);
                         pump.PumpEnbSetting(false);
+                        pump.CloseAllValve();
                         MessageSender(TASK_BUTTON_CLICK, BUTTON_PAUSE, STATE_RESUME);
                     }
 
