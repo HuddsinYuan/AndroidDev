@@ -83,7 +83,7 @@ public class StepControl {
             if (iStep == STEP_DECOLOR_BACK + 1 && !STEP_CYCLE) {
                 STEP_CYCLE = true;
                 iStep = STEP_WASH_BACK;
-                innerCycle++;
+                innerCycle = 2;
             }
 
             Log.i("StepControl", "Next step is " + getStringStep());

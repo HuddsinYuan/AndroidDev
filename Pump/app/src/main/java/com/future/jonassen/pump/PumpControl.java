@@ -183,7 +183,7 @@ public class PumpControl
         Log.i(TAG, "PumpFluxUL");
     }
 
-    private void CloseAllValve()
+    public void CloseAllValve()
     {
 //        PumpEnbSetting(false);
         GPIOJNI.WriteGPIO(VALVE_GROUP, VALVE1, CLOSE_STATE);
@@ -192,5 +192,10 @@ public class PumpControl
         GPIOJNI.WriteGPIO(VALVE_GROUP, VALVE4, CLOSE_STATE);
         Log.i(TAG, "Close All Valve.");
 //        PumpEnbSetting(true);
+    }
+
+
+    public boolean getPumpEnbState() {
+        return enablestate;
     }
 }
