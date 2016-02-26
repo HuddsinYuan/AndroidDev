@@ -8,24 +8,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainView">
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvtest1"
-        android:text="Num"
-
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvtest1"
-        android:id="@+id/tvtest2"
-        android:text="sss"
-        />
-
-
     <TextView
         android:id="@+id/above_all_title"
         android:layout_width="fill_parent"

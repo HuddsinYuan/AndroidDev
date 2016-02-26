@@ -8,26 +8,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainView">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvtest1"
-        android:text="Num"
-
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/rt_title"
-        android:layout_toLeftOf="@+id/btn_start"
-        android:layout_toStartOf="@+id/btn_start"
-        android:layout_above="@+id/rt_title_total" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvtest1"
-        android:id="@+id/tvtest2"
-        android:text="sss"
-        />
 
     <TextView
         android:id="@+id/above_all_title"
