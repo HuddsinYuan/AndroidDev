@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/Jonassen/Project/AndroidDev/HelloGlass/barcodefraglibv2/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/ic_launcher.png",
+        "source": "/Users/Jonassen/Project/AndroidDev/HelloGlass/barcodefraglibv2/build/intermediates/bundles/debug/res/drawable-hdpi-v4/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/Jonassen/Project/AndroidDev/HelloGlass/barcodefraglibv2/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/ic_glass_logo.png",
+        "source": "/Users/Jonassen/Project/AndroidDev/HelloGlass/barcodefraglibv2/build/intermediates/bundles/debug/res/drawable-hdpi-v4/ic_glass_logo.png"
+    }
+]
