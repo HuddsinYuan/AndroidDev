@@ -7,55 +7,67 @@ import android.util.Log;
  */
 public class StepControl {
 
-    private static final int STEP_COLOR = 40002;
-    private static final int STEP_COLOR_BACK = 40003;
+    private static final int STEP_STAIN = 40002;
+    private static final int STEP_STAIN_REVERSE = 40003;
     private static final int STEP_WASH = 40004;
     private static final int STEP_WASH_BACK = 40005;
-    private static final int STEP_DECOLOR = 40006;
-    private static final int STEP_DECOLOR_BACK = 40007;
+    private static final int STEP_DESTAIN = 40006;
+    private static final int STEP_DESTAIN_REVERSE = 40007;
     private boolean STEP_CYCLE = false;
     private boolean RunningState = true;
 
-    private int iStep = STEP_COLOR;
-    private int innerCycle = 0;
-    public int iTotal = 5;
+    private int iStep = STEP_STAIN;
+    private int destainCycle = 0;
+    private int waterCycle = 0;
 
-    public int getInnerCycle() {
-        return innerCycle;
+    public int DestainTime;
+    public int WaterTime;
+
+    private boolean run_for_once = true;
+
+    public int getDestainCycle() {
+        return destainCycle;
     }
 
-    public StepControl(int iTotal) {
-        this.iTotal = iTotal;
+    public int getWaterCycle() {
+        return waterCycle;
+    }
+
+    public StepControl(int DestainTime, int WaterTime) {
+        this.DestainTime = DestainTime;
+        this.WaterTime = WaterTime;
+        this.iStep = STEP_STAIN;
+        Log.i("StepControl", "水循环进行" + String.valueOf(WaterTime) + "次，脱色循环进行" + String.valueOf(DestainTime) + "次");
     }
 
     public int getStep() {
         return iStep;
     }
 
-    public String getStringStep() {
+    public String getStringStep(int Step) {
         String s = new String();
 
-        switch (iStep) {
-            case STEP_DECOLOR_BACK:
-                s = "STEP_DECOLOR_BACK";
+        switch (Step) {
+            case STEP_DESTAIN_REVERSE:
+                s = "抽回脱色液";
                 break;
-            case STEP_DECOLOR:
-                s = "STEP_DECOLOR";
+            case STEP_DESTAIN:
+                s = "倒入脱色液";
                 break;
-            case STEP_COLOR:
-                s = "STEP_COLOR";
+            case STEP_STAIN:
+                s = "倒入染色液";
                 break;
-            case STEP_COLOR_BACK:
-                s = "STEP_COLOR_BACK";
+            case STEP_STAIN_REVERSE:
+                s = "抽回染色液";
                 break;
             case STEP_WASH:
-                s = "STEP_WASH";
+                s = "倒入清水";
                 break;
             case STEP_WASH_BACK:
-                s = "STEP_WASH_BACK";
+                s = "抽回清水";
                 break;
             default:
-                s = "Error";
+                s = "结束";
                 break;
         }
 
@@ -66,61 +78,43 @@ public class StepControl {
         return STEP_CYCLE;
     }
 
-    public void NextStep() {
-        if (innerCycle < iTotal) {
-
-            if (!STEP_CYCLE) {
-                iStep++;
-            } else {
-                if (iStep == STEP_WASH_BACK) {
-                    iStep = STEP_DECOLOR;
-                } else if (iStep == STEP_DECOLOR) {
-                    iStep = STEP_WASH_BACK;
-                    innerCycle++;
-                }
-            }
-
-            if (iStep == STEP_DECOLOR_BACK + 1 && !STEP_CYCLE) {
-                STEP_CYCLE = true;
-                iStep = STEP_WASH_BACK;
-                innerCycle = 2;
-            }
-
-            Log.i("StepControl", "Next step is " + getStringStep());
-        } else {
-            RunningState = false;
-            Log.i("StepControl", "Out of Cycle. Running State " + String.valueOf(RunningState));
-        }
-
-    }
-
     public boolean isRunningState() {
         return RunningState;
     }
 
-    public void OutputMessage() {
-        switch (iStep) {
-            case STEP_DECOLOR_BACK:
-                Log.i("StepControl", "STEP_DECOLOR_BACK. Running State: " + String.valueOf(STEP_CYCLE) + "Cycle: " + String.valueOf(innerCycle));
-                break;
-            case STEP_DECOLOR:
-                Log.i("StepControl", "STEP_DECOLOR. Running State: " + String.valueOf(STEP_CYCLE) + "Cycle: " + String.valueOf(innerCycle));
-                break;
-            case STEP_COLOR:
-                Log.i("StepControl", "STEP_COLOR. Running State: " + String.valueOf(STEP_CYCLE) + "Cycle: " + String.valueOf(innerCycle));
-                break;
-            case STEP_COLOR_BACK:
-                Log.i("StepControl", "STEP_COLOR_BACK. Running State: " + String.valueOf(STEP_CYCLE) + "Cycle: " + String.valueOf(innerCycle));
-                break;
-            case STEP_WASH:
-                Log.i("StepControl", "STEP_WASH. Running State: " + String.valueOf(STEP_CYCLE) + "Cycle: " + String.valueOf(innerCycle));
-                break;
-            case STEP_WASH_BACK:
-                Log.i("StepControl", "STEP_WASH_BACK. Running State: " + String.valueOf(STEP_CYCLE) + "Cycle: " + String.valueOf(innerCycle));
-                break;
-            default:
-                Log.i("StepControl", "Error");
-                break;
+    public void NextStep() {
+        if (RunningState) {
+            /*
+                水洗的次数判断
+             */
+            if (iStep == STEP_DESTAIN && destainCycle == DestainTime - 1) {
+                RunningState = false;
+            } else if (iStep == STEP_WASH_BACK && waterCycle < WaterTime - 1) {
+                iStep = STEP_WASH;
+                waterCycle++;
+            }
+            /*
+                脱色的次数判断，最后要停留在脱色阶段
+             */
+            else if (iStep == STEP_DESTAIN && destainCycle < DestainTime - 1) {
+                iStep = STEP_DESTAIN_REVERSE;
+            } else if (iStep == STEP_DESTAIN_REVERSE && destainCycle < DestainTime - 1) {
+                iStep = STEP_DESTAIN;
+                destainCycle++;
+            }
+
+            /*
+                如果既不是水洗阶段 也不是脱色阶段
+             */
+            else {
+                iStep++;
+            }
         }
+
+    }
+
+    public void OutputMessage() {
+        Log.i("StepControl", "下一个步骤：" + this.getStringStep(iStep) + " " + "destainCycle: " + String.valueOf(destainCycle) + " waterCycle: " + String.valueOf(waterCycle)
+                + "Running State: " + String.valueOf(RunningState));
     }
 }

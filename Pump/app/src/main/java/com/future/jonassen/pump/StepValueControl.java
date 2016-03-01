@@ -26,10 +26,9 @@ public class StepValueControl {
 
     int cycle;
     int wait_time;
-    int pump_ml_time;
-    int pump_ul_time;
+    int pump_time;
     int valve;
-    boolean isMLTime;
+//    boolean isMLTime;
     boolean isWaitTime;
     boolean dir;
     boolean set_ok;
@@ -40,11 +39,10 @@ public class StepValueControl {
     public StepValueControl(StepValueControl stepValueControl) {
         this.dir = stepValueControl.dir;
         this.wait_time = stepValueControl.wait_time;
-        this.pump_ml_time = stepValueControl.pump_ml_time;
-        this.pump_ul_time = stepValueControl.pump_ul_time;
+        this.pump_time = stepValueControl.pump_time;
         this.valve = stepValueControl.valve;
         this.isWaitTime = stepValueControl.isWaitTime;
-        this.isMLTime = stepValueControl.isMLTime;
+//        this.isMLTime = stepValueControl.isMLTime;
         this.set_ok = stepValueControl.set_ok;
         this.s = stepValueControl.s;
         this.lock = stepValueControl.lock;
@@ -56,57 +54,11 @@ public class StepValueControl {
         s = "";
         cycle = 0;
         wait_time = 0;
-        pump_ml_time = 0;
-        pump_ul_time = 0;
-        isMLTime = true;
+        pump_time = 0;
         isWaitTime = false;
         valve = 0;
         dir = false;
         set_ok = false;
     }
 
-//    public void getCurrentStepParam(int currentStep) {
-////        StepValueControl svc = new StepValueControl();
-//        switch (currentStep) {
-//
-//            case STEP_COLOR:
-//                this.s = String.valueOf(R.string.ColorStep);
-//                this.cycle =1;
-//                this.time = 120;
-//                this.valve = 4;
-//                this.dir = true;
-//                break;
-//
-//            case STEP_COLOR_BACK:
-//                this.s = String.valueOf(R.string.ColorDone);
-//                this.cycle = 0;
-//                this.time = 0;
-//                this.valve = 4;
-//                this.dir = false;
-//                break;
-//
-//            case STEP_WASH:
-//                s = "STEP_WASH";
-//                break;
-//
-//            case STEP_WASH_BACK:
-//                s = "STEP_WASH_BACK";
-//                break;
-//
-//            case STEP_DECOLOR:
-//                s = "STEP_DECOLOR";
-//                break;
-//
-//            case STEP_DECOLOR_BACK:
-//                s = "STEP_DECOLOR_BACK";
-//                break;
-//
-//            default:
-//                s = "Error";
-//                break;
-//        }
-
-//        svc = this;
-//        return svc;
-//    }
 }

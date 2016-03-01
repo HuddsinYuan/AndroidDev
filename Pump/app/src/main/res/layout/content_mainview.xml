@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16sp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:theme="@android:style/Theme.Holo"
     tools:context=".MainView">
 
 
@@ -17,187 +18,282 @@
         android:text="@string/above_all_title"
         android:textColor="#ff0000"
         android:textSize="45sp"
+        android:textStyle="bold"
         />
 
     <TextView
-        android:id="@+id/rt_title"
+        android:id="@+id/para_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/rt_title"
+        android:text="@string/para_title"
+        android:textSize="@dimen/setting_title_size"
         android:textColor="#0000ff"
-        android:textSize="18sp"
-        android:layout_below="@+id/above_all_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
-
-    <TextView
-        android:id="@+id/rt_title_total"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/rt_title"
-        android:layout_alignStart="@id/rt_title"
-        android:layout_below="@id/rt_title"
-        android:text="@string/rt_title_total_time"
-        android:layout_marginTop="20dp" />
-
-    <EditText
-        android:id="@+id/rt_ans_total"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
-        android:layout_marginTop="155dp" />
-
-    <TextView
-        android:id="@+id/rt_title_water_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/rt_title"
-        android:layout_alignStart="@id/rt_title"
-        android:layout_below="@id/rt_title_total"
-        android:text="@string/rt_title_water_time"
-        android:layout_marginTop="20dp" />
-
-    <EditText
-        android:id="@+id/rt_ans_water_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
-        android:layout_marginTop="190dp" />
-
-    <TextView
-        android:id="@+id/rt_title_cycle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/rt_title"
-        android:layout_alignStart="@id/rt_title"
-        android:layout_below="@id/rt_title_water_time"
-        android:text="@string/rt_title_cycle"
-        android:layout_marginTop="20dp" />
-
-    <EditText
-        android:id="@+id/rt_ans_cycle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="220dp"
-        android:layout_marginTop="225dp" />
-
-    <TextView
-        android:id="@+id/rt_title_each_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/rt_title"
-        android:layout_alignStart="@id/rt_title"
-        android:layout_below="@id/rt_title_cycle"
-        android:text="@string/rt_title_each_time"
-        android:layout_marginTop="20dp" />
-
-    <EditText
-        android:id="@+id/rt_ans_each_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="220dp"
-        android:layout_marginTop="260dp" />
-
-
-    <TextView
-        android:id="@+id/data_usr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView"
-        android:layout_below="@+id/textView"
-        android:text="@string/data_usr"/>
-
-    <TextView
-        android:id="@+id/data_ans_usr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/data_usr"
-        android:layout_toEndOf="@id/data_usr"
-        android:layout_toRightOf="@id/data_usr"
-        android:text="@string/testVal"
+        android:textStyle="bold"
+        android:layout_below="@id/above_all_title"
+        android:layout_marginTop="@dimen/setting_title_interval"
         />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/para_title_stainflux"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/data_title"
+        android:text="@string/para_title_stainflux"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/black"
+        android:layout_alignLeft="@id/para_title"
+        android:layout_alignStart="@id/para_title"
+        android:layout_below="@id/para_title"
+        android:layout_marginTop="@dimen/setting_title_interval"
+        />
+
+    <TextView
+        android:id="@+id/para_title_staintime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/para_title_staintime"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/black"
+        android:layout_below="@id/para_title_stainflux"
+        android:layout_alignLeft="@id/para_title"
+        android:layout_alignStart="@id/para_title"
+        android:layout_marginTop="@dimen/setting_title_interval"
+        />
+
+    <TextView
+        android:id="@+id/para_title_watertime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/para_title_watertime"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/black"
+        android:layout_below="@id/para_title_staintime"
+        android:layout_alignLeft="@id/para_title"
+        android:layout_alignStart="@id/para_title"
+        android:layout_marginTop="@dimen/setting_title_interval"
+        />
+
+    <TextView
+        android:id="@+id/para_title_destainflux"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/para_title_destainflux"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/black"
+        android:layout_below="@id/para_title_watertime"
+        android:layout_alignLeft="@id/para_title"
+        android:layout_alignStart="@id/para_title"
+        android:layout_marginTop="@dimen/setting_title_interval"
+        />
+
+    <TextView
+        android:id="@+id/para_title_destaintime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/para_title_destaintime"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/black"
+        android:layout_below="@id/para_title_destainflux"
+        android:layout_alignLeft="@id/para_title"
+        android:layout_alignStart="@id/para_title"
+        android:layout_marginTop="@dimen/setting_title_interval"
+        />
+
+    <TextView
+        android:id="@+id/para_title_destaincycle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/para_title_destaincycle"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/black"
+        android:layout_below="@id/para_title_destaintime"
+        android:layout_alignLeft="@id/para_title"
+        android:layout_alignStart="@id/para_title"
+        android:layout_marginTop="@dimen/setting_title_interval"
+        />
+
+    <EditText
+        android:id="@+id/para_ans_stainflux"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="null"
+        android:textSize="@dimen/setting_font_size"
+        android:layout_below="@id/para_title"
+        android:layout_toRightOf="@id/para_title_stainflux"
+        android:layout_toEndOf="@id/para_title_stainflux"
+        android:layout_marginTop="12sp"
+        />
+
+    <EditText
+        android:id="@+id/para_ans_staintime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="null"
+        android:textSize="@dimen/setting_font_size"
+        android:layout_below="@id/para_ans_stainflux"
+        android:layout_toEndOf="@id/para_title_staintime"
+        android:layout_toRightOf="@id/para_title_destaintime"
+        android:layout_marginTop="@dimen/setting_ans_horizon_interval"
+        />
+
+    <EditText
+        android:id="@+id/para_ans_watertime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="null"
+        android:textSize="@dimen/setting_font_size"
+        android:layout_below="@id/para_ans_staintime"
+        android:layout_toEndOf="@id/para_title_watertime"
+        android:layout_toRightOf="@id/para_title_watertime"
+        android:layout_marginTop="@dimen/setting_ans_horizon_interval"
+        />
+
+    <EditText
+        android:id="@+id/para_ans_destainflux"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="null"
+        android:textSize="@dimen/setting_font_size"
+        android:layout_below="@id/para_ans_watertime"
+        android:layout_toRightOf="@id/para_title_destainflux"
+        android:layout_toEndOf="@id/para_title_destainflux"
+        android:layout_marginTop="@dimen/setting_ans_horizon_interval"
+        />
+
+    <EditText
+        android:id="@+id/para_ans_destaintime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="null"
+        android:textSize="@dimen/setting_font_size"
+        android:layout_below="@id/para_ans_destainflux"
+        android:layout_toEndOf="@id/para_title_destaintime"
+        android:layout_toRightOf="@id/para_title_destaintime"
+        android:layout_marginTop="@dimen/setting_ans_horizon_interval"
+        />
+
+    <EditText
+        android:id="@+id/para_ans_destaincycle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="null"
+        android:textSize="@dimen/setting_font_size"
+        android:layout_below="@id/para_ans_destaintime"
+        android:layout_toRightOf="@id/para_title_destaincycle"
+        android:layout_toEndOf="@id/para_title_destaincycle"
+        android:layout_marginTop="@dimen/setting_ans_horizon_interval"
+        />
+
+
+
+    <TextView
+        android:id="@+id/realtime_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/realtime_title"
+        android:textSize="@dimen/realtime_title"
         android:textColor="#0000ff"
-        android:textSize="18sp"
-        android:layout_below="@+id/rt_title_each_time"
-        android:layout_alignLeft="@+id/rt_title_each_time"
-        android:layout_alignStart="@+id/rt_title_each_time"
-        android:layout_marginTop="20dp" />
-
-
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="暂停"
-        android:layout_alignTop="@+id/textView"
-        android:layout_toLeftOf="@+id/btn_ff"
-        android:layout_toStartOf="@+id/btn_ff" />
+        android:textStyle="bold"
+        android:layout_alignTop="@+id/para_title"
+        android:layout_alignLeft="@+id/btn_pause"
+        android:layout_alignStart="@+id/btn_pause"
+        android:layout_marginLeft="42dp"
+        android:layout_marginStart="42dp" />
 
     <TextView
-        android:id="@+id/data_step"
+        android:id="@+id/realtime_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/data_usr"
-        android:layout_alignStart="@id/data_usr"
-        android:layout_below="@id/data_usr"
-        android:text="@string/data_step"
+        android:text="null"
+        android:textSize="@dimen/realtime_title"
+        android:textColor="#ff0000"
+        android:layout_alignTop="@id/realtime_title"
+        android:layout_toRightOf="@id/realtime_title"
+        android:layout_toEndOf="@id/realtime_title"
         />
 
     <TextView
-        android:id="@+id/data_ans_step"
+        android:id="@+id/realtime_step"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/data_step"
-        android:layout_toEndOf="@id/data_step"
-        android:layout_toRightOf="@id/data_step"
-        android:text="@string/testVal"
+        android:text="@string/realtime_step"
+        android:textSize="@dimen/realtime_font"
+        android:textColor="@color/black"
+        android:layout_below="@id/realtime_title"
+        android:layout_alignLeft="@id/realtime_title"
+        android:layout_alignStart="@id/realtime_title"
+        android:layout_marginTop="@dimen/realtime_title_interval"
         />
 
     <TextView
-        android:id="@+id/data_cycle"
+        android:id="@+id/realtime_cycle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/data_usr"
-        android:layout_alignStart="@id/data_usr"
-        android:layout_below="@id/data_step"
-        android:text="@string/data_cycle"
+        android:text="@string/realtime_cycle"
+        android:textSize="@dimen/realtime_font"
+        android:textColor="@color/black"
+        android:layout_below="@id/realtime_step"
+        android:layout_alignLeft="@id/realtime_title"
+        android:layout_alignStart="@id/realtime_title"
+        android:layout_marginTop="@dimen/realtime_title_interval"
         />
 
     <TextView
-        android:id="@+id/data_ans_cycle"
+        android:id="@+id/realtime_remaintime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/data_cycle"
-        android:layout_toEndOf="@id/data_cycle"
-        android:layout_toRightOf="@id/data_cycle"
-        android:text="@string/testVal"
+        android:text="@string/realtime_remaintime"
+        android:textSize="@dimen/realtime_font"
+        android:textColor="@color/black"
+        android:layout_below="@id/realtime_cycle"
+        android:layout_alignLeft="@id/realtime_title"
+        android:layout_alignStart="@id/realtime_title"
+        android:layout_marginTop="@dimen/realtime_title_interval"
         />
 
     <TextView
-        android:id="@+id/data_all_time"
+        android:id="@+id/realtime_ans_step"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/data_usr"
-        android:layout_alignStart="@id/data_usr"
-        android:layout_below="@id/data_cycle"
-        android:text="@string/data_all_time"
+        android:text="null"
+        android:textSize="@dimen/realtime_font"
+        android:textColor="@color/darkgray"
+        android:layout_alignTop="@id/realtime_step"
+        android:layout_toEndOf="@id/realtime_step"
+        android:layout_toRightOf="@id/realtime_step"
+        android:layout_marginLeft="@dimen/realtime_interval"
+        android:layout_marginStart="@dimen/realtime_interval"
         />
 
     <TextView
-        android:id="@+id/data_ans_all_time"
+        android:id="@+id/realtime_ans_cycle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/data_all_time"
-        android:layout_toEndOf="@id/data_all_time"
-        android:layout_toRightOf="@id/data_all_time"
-        android:text="@string/testVal"
+        android:text="null"
+        android:textSize="@dimen/realtime_font"
+        android:textColor="@color/darkgray"
+        android:layout_alignTop="@id/realtime_cycle"
+        android:layout_toRightOf="@id/realtime_cycle"
+        android:layout_toEndOf="@id/realtime_cycle"
+        android:layout_marginStart="@dimen/realtime_interval"
+        android:layout_marginLeft="@dimen/realtime_interval"
+        />
+
+    <TextView
+        android:id="@+id/realtime_ans_remaintime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="null"
+        android:textSize="@dimen/realtime_font"
+        android:textColor="@color/darkgray"
+        android:layout_alignLeft="@id/realtime_remaintime"
+        android:layout_below="@id/realtime_remaintime"
+        android:layout_marginTop="@dimen/realtime_interval"
         />
 
     <Button
@@ -205,52 +301,111 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_start"
-        android:layout_marginTop="34dp"
-        android:layout_below="@+id/data_all_time"
-        android:layout_toLeftOf="@+id/data_ans_cycle"
-        android:layout_toStartOf="@+id/data_ans_cycle" />
+        android:textStyle="bold"
+        android:textSize="@dimen/button_font"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/para_title"
+        android:layout_alignEnd="@+id/para_title"
+        android:layout_marginBottom="36dp" />
 
     <Button
         android:id="@+id/btn_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/btn_pause"
+        android:textStyle="bold"
+        android:textSize="@dimen/button_font"
         android:layout_alignTop="@id/btn_start"
         android:layout_marginLeft="@dimen/button_margin_horizon"
         android:layout_marginStart="@dimen/button_margin_horizon"
         android:layout_toEndOf="@id/btn_start"
         android:layout_toRightOf="@id/btn_start"
-        android:text="@string/btn_pause"
         />
 
     <Button
         android:id="@+id/btn_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/btn_start"
-        android:layout_alignStart="@id/btn_start"
-        android:layout_below="@id/btn_start"
-        android:layout_marginTop="@dimen/button_margin_vertical"
         android:text="@string/btn_stop"
+        android:textStyle="bold"
+        android:textSize="@dimen/button_font"
+        android:layout_alignTop="@id/btn_start"
+        android:layout_toRightOf="@id/btn_pause"
+        android:layout_toEndOf="@id/btn_pause"
+        android:layout_marginLeft="@dimen/button_margin_horizon"
+        android:layout_marginStart="@dimen/button_margin_horizon"
         />
 
-    <Button
-        android:id="@+id/btn_set"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_set"
-        android:layout_alignTop="@+id/btn_stop"
-        android:layout_alignLeft="@+id/btn_pause"
-        android:layout_alignStart="@+id/btn_pause" />
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/darkgray"
+        android:layout_marginBottom="8sp"
+        android:text="@string/ml_unit"
+        android:layout_alignBottom="@id/para_ans_stainflux"
+        android:layout_toEndOf="@id/para_ans_stainflux"
+        android:layout_toRightOf="@id/para_ans_stainflux"
+        />
 
-    <Button
-        android:id="@+id/btn_ff"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_ff"
-        android:layout_alignTop="@+id/btn_set"
-        android:layout_marginLeft="@dimen/button_margin_horizon"
-        android:layout_toEndOf="@id/btn_set"
-        android:layout_toRightOf="@id/btn_set"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/darkgray"
+        android:layout_marginBottom="8sp"
+        android:text="@string/min_unit"
+        android:layout_alignBottom="@id/para_ans_staintime"
+        android:layout_toEndOf="@id/para_ans_staintime"
+        android:layout_toRightOf="@id/para_ans_staintime"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/darkgray"
+        android:layout_marginBottom="8sp"
+        android:text="@string/time_unit"
+        android:layout_alignBottom="@id/para_ans_watertime"
+        android:layout_toRightOf="@id/para_ans_watertime"
+        android:layout_toEndOf="@id/para_ans_watertime"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/darkgray"
+        android:layout_marginBottom="8sp"
+        android:text="@string/ml_unit"
+        android:layout_alignBottom="@id/para_ans_destainflux"
+        android:layout_toRightOf="@id/para_ans_destainflux"
+        android:layout_toEndOf="@id/para_ans_destainflux"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/darkgray"
+        android:layout_marginBottom="8sp"
+        android:text="@string/min_unit"
+        android:layout_alignBottom="@id/para_ans_destaintime"
+        android:layout_toRightOf="@id/para_ans_destainflux"
+        android:layout_toEndOf="@id/para_ans_destainflux"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/setting_font_size"
+        android:textColor="@color/darkgray"
+        android:layout_marginBottom="8sp"
+        android:text="@string/time_unit"
+        android:layout_alignBottom="@id/para_ans_destaincycle"
+        android:layout_toEndOf="@id/para_ans_destaincycle"
+        android:layout_toRightOf="@id/para_ans_destaincycle"
         />
 
 </RelativeLayout>

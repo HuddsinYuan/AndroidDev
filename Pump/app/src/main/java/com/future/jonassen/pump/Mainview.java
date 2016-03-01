@@ -18,10 +18,11 @@ import java.lang.reflect.Method;
 @SuppressWarnings("NullArgumentToVariableArgMethod")
 public class Mainview extends Activity {
 
-    private static final String STRING_COLOR_STEP = "染色中";
-    private static final String STRING_COLOR_DONE = "染色结束";
-    private static final String STRING_WASH_STEP = "水洗";
-    private static final String STRING_DECOLOR_STEP = "脱色";
+    private static final String STRING_STAIN_STEP = "正在染色";
+    private static final String STRING_STAIN_FINISH = "染色结束";
+    private static final String STRING_WASH_STEP = "正在水洗";
+    private static final String STRING_DESTAIN_STEP = "正在脱色";
+    private static final String STRING_DESTAIN_DONE = "倒入废液";
 
     private static final int TASK_MAIN_WORK = 10001;
     private static final int TASK_SECOND_WORK = 10002;
@@ -39,43 +40,52 @@ public class Mainview extends Activity {
     private static final int STATE_PAUSE = 30001;
     private static final int STATE_RESUME = 30002;
 
-    private static final int STEP_COLOR = 40002;
-    private static final int STEP_COLOR_BACK = 40003;
+    private static final int STEP_STAIN = 40002;
+    private static final int STEP_STAIN_REVERSE = 40003;
     private static final int STEP_WASH = 40004;
     private static final int STEP_WASH_BACK = 40005;
-    private static final int STEP_DECOLOR = 40006;
-    private static final int STEP_DECOLOR_BACK = 40007;
+    private static final int STEP_DESTAIN = 40006;
+    private static final int STEP_DESTAIN_BACK = 40007;
 
     private static int TempStep = 0;
     private static int TempTime = 0;
 
+    private static boolean IsSetting = false;
+
+
     /*
-        目前在染色阶段，水洗阶段，脱色阶段，需要抽取的染色液，水，脱色液的数量并不清楚，暂定 10ml 15ml 20ml
-
+        需要从View页面中抽取以下几个值
      */
-    // TODO: 16/1/6 这个具体参数需要和厂家确认
-    private static final Flux iColor = new Flux(10, 0);
-    private static final Flux iWater = new Flux(10, 0);
-    private static final Flux iDecolor = new Flux(5, 0);
 
+    /*
+        按键按下给出的信号
+     */
     private Button btnStart;
     private Button btnPause;
     private Button btnStop;
-    private Button btnSet;
-    private Button btnFf;
 
-    private static boolean allowSetting = true;
-
-    private EditText etColorTime;
+    /*
+        需要设置的六个参数
+     */
+    private EditText etStainFlux;
+    private EditText etStainTime;
     private EditText etWaterTime;
-    private EditText etCycle;
-    private EditText etEachTime;
+    private EditText etDestainFlux;
+    private EditText etDestainTime;
+    private EditText etDestainCycle;
 
-    private TextView tvUser;
+    /*
+        当前的运行状态
+     */
+    private TextView tvStatus;
+
+    /*
+        当前的状态的运行数据
+     */
     private TextView tvStep;
     private TextView tvCycle;
-    private TextView tvTime;
-    private TextView tvStatus;
+    private TextView tvRemainTime;
+
 
     private boolean isRestarted = false;
     private boolean run_for_once = false;
@@ -84,28 +94,87 @@ public class Mainview extends Activity {
     /*
         默认的厂家设置的数据
 
-        厂家默认的染色时间为120min, 水洗时间为10s, 脱色时间为10min
+        厂家设定的参数为
+            1、进染色液100ml --> 100s
+            2、染色液静置120mins --> 120*60s
+            3、染色液回抽100ml+10ml --> 110s
+            4、水洗凝胶流量 100ml --> 100s
+            5、水洗凝胶静置 5s --> 5s
+            6、重复过程 3次
+            7、进脱色液200ml --> 200s
+            8、脱色液静置10mins --> 10*60s
+            9、回抽脱色液200ml --> 200s
+            10、脱色循环n次
+            11、脱色液保持
 
         目前为了测试设置为染色120s, 水洗时间为10s, 脱色时间为10s
      */
-    private static final int iMauTimeColor = 20;
-    private static final int iMauTimeColorReverse = iMauTimeColor + 2;
-    private static final int iMauTimeWater = 10;
-    private static final int iMauTimeDecolor = 10;
+    private static final int iMauStainSecond = 100; // 可以设定
+    private static final int iMauStainStandMinute = 120; // 可以设定
+    private static final int iMauStainReverseSecond = (int)(iMauStainSecond * 1.1);
+    private static final int iMauWaterSecond = iMauStainSecond;
+    private static final int iMauWaterStand = 5;
+    private static final int iMauWaterCycle = 3; // 可以设定
+    private static final int iMauDestainSecond = iMauStainSecond * 2; // 可以设定
+    private static final int iMauDestainStandMinute = 10; // 可以设定
+    private static final int iMauDestainReverseSecond = iMauDestainSecond;
+    private static final int iMauDestainCycle = 3; // 可以设定
+
 
     /*
         获取到用户设置的数据
-
-        iColorTime --> 传送给iTimeColor
-        iWaterTime --> 传送给iTimeWater
-        iCycle --> 传送给StepControl来作为步骤控制器
-        iEachTime --> 传送给iTimeDecolor
      */
-    private int iUserTimeColor;
-    private int iUserTimeColorReverse;
-    private int iUserTimeWater;
-    private int iUserCycle = 4;
-    private int iUserTimeDecolor;
+    private int iUserStainSecond;
+    private int iUserStainStandMinute;
+    private int iUserWaterCycle;
+    private int iUserDestainSecond;
+    private int iUserDestainStandMinute;
+    private int iUserDestainCycle;
+
+    private int iUserStainReverseSecond;
+    private int iUserWaterSecond;
+    private int iUserWaterStand = iMauWaterStand;
+    private int iUserDestainReverseSecond;
+
+    private void GetParaFromSetting() {
+        iUserStainSecond = Integer.parseInt(etStainFlux.getText().toString());
+        iUserStainStandMinute = Integer.parseInt(etStainTime.getText().toString());
+        iUserWaterCycle = Integer.parseInt(etWaterTime.getText().toString());
+        iUserDestainSecond = Integer.parseInt(etDestainFlux.getText().toString());
+        iUserDestainStandMinute = Integer.parseInt(etDestainTime.getText().toString());
+        iUserDestainCycle = Integer.parseInt(etDestainCycle.getText().toString());
+        iUserStainReverseSecond = (int) (1.1 * iUserStainSecond);
+        iUserWaterSecond = iUserStainSecond;
+        iUserWaterStand = iMauWaterStand;
+        iUserDestainReverseSecond = iUserDestainSecond;
+        printSettingInfo();
+    }
+
+    private void InitParaFromMauSetting() {
+        iUserStainSecond = iMauStainSecond;
+        iUserStainStandMinute = iMauStainStandMinute;
+        iUserWaterCycle = iMauWaterCycle;
+        iUserDestainSecond = iMauDestainSecond;
+        iUserDestainStandMinute = iMauDestainStandMinute;
+        iUserDestainCycle = iMauDestainCycle;
+        iUserStainReverseSecond = iMauStainReverseSecond;
+        iUserWaterSecond = iMauWaterSecond;
+        iUserWaterStand = iMauWaterStand;
+        iUserDestainReverseSecond = iMauDestainReverseSecond;
+    }
+
+    private void printSettingInfo() {
+        Log.i("抽取的染色液流量", String.valueOf(iUserStainSecond) + " ml.");
+        Log.i("染色液静置时间", String.valueOf(iUserStainStandMinute) + " min.");
+        Log.i("染色液回抽时间", String.valueOf(iUserStainReverseSecond) + " ml.");
+        Log.i("用户水洗次数", String.valueOf(iUserWaterCycle) + " 次.");
+        Log.i("水洗时间", String.valueOf(iUserWaterSecond) + " s.");
+        Log.i("水静置时间", String.valueOf(iUserWaterStand) + " s.");
+        Log.i("抽取的脱色液流量", String.valueOf(iUserDestainSecond) + " ml.");
+        Log.i("脱色液静置时间", String.valueOf(iUserDestainStandMinute) + " min.");
+        Log.i("脱色次数", String.valueOf(iUserDestainCycle) + " 次.");
+        Log.i("脱色液回抽时间", String.valueOf(iUserDestainReverseSecond) + " s.");
+    }
 
     /*
         每一个步骤需要的参数
@@ -113,27 +182,21 @@ public class Mainview extends Activity {
 
     StepValueControl svc = new StepValueControl();
     StepValueControl svc_init = new StepValueControl();
-//    PumpControl pumpControl = new PumpControl();
 
     /*
         1秒时间到, 推动主线程的进步
      */
-//    private static boolean set_ok = false;
     private int count_time = 0;
 
     /*
         为了测试添加
      */
-    private TextView tvTest1;
-    private TextView tvTest2;
-    private int mlcounter = 0;
-    private int ulcounter = 0;
 
     private Class<StatusVal> cls; //statusVal的反射类
     private StatusVal statusVal;
 
-    private PumpControl pump = new PumpControl();
-    private StepControl Step = new StepControl(5);
+    private tPumpControl pump = new tPumpControl();
+    private StepControl Step = new StepControl(iMauDestainCycle+1, iMauWaterCycle+1);
 
     private Thread mainThread;
     private Thread timeThread;
@@ -148,20 +211,20 @@ public class Mainview extends Activity {
                     int all_time = msg.arg2;
                     int min = all_time / 60;
                     int sec = all_time % 60;
-                    tvTime.setText(String.format("%d 分 %d 秒", min, sec));
+                    tvRemainTime.setText(String.format("%d 分 %d 秒", min, sec));
                     break;
 
                 case TASK_SECOND_WORK:
                     all_time = msg.arg1;
                     min = all_time / 60;
                     sec = all_time % 60;
-                    tvTime.setText(String.format("%d 分 %d 秒", min, sec));
+                    tvRemainTime.setText(String.format("%d 分 %d 秒", min, sec));
 
                     break;
 
                 case TASK_SETTING_DONE:
                     Toast.makeText(Mainview.this, "SettingDone", Toast.LENGTH_SHORT).show();
-                    Step = new StepControl(iUserCycle);
+                    Step = new StepControl(iUserDestainCycle, iUserWaterCycle);
                     break;
 
                 case TASK_END_WORK:
@@ -222,13 +285,16 @@ public class Mainview extends Activity {
         mainThread = new Thread(PumpControl);
         timeThread = new Thread(SecondControl);
         statusVal = new StatusVal();
+        InitParaFromMauSetting();
 
-
-        svc_init.s = STRING_COLOR_STEP;
+        svc_init.s = STRING_STAIN_STEP;
         svc_init.cycle = 1;
-        svc_init.wait_time = allowSetting ? iMauTimeColor : iUserTimeColor;
-        svc_init.pump_ml_time = iColor.iFluxML;
-        svc_init.pump_ul_time = iColor.iFluxUL;
+        svc_init.wait_time = IsSetting ? iUserStainStandMinute : iMauStainStandMinute;
+        /*
+            为了测试将静置时间设置成sec，实际测试为min
+         */
+//        svc_init.wait_time = svc_init.wait_time * 60;
+        svc_init.pump_time = IsSetting ? iUserStainSecond : iMauStainSecond;
         svc_init.valve = 4;
         svc_init.dir = true;
         if (svc_init.dir) {
@@ -236,36 +302,50 @@ public class Mainview extends Activity {
         } else {
             svc_init.s += "反向";
         }
-        svc_init.isMLTime = true;
         svc_init.isWaitTime = false;
 
         /*
             开始资源定位
          */
+        /*
+            按键资源的定位
+         */
         btnStart = (Button) findViewById(R.id.btn_start);
         btnPause = (Button) findViewById(R.id.btn_pause);
         btnStop = (Button) findViewById(R.id.btn_stop);
-        btnSet = (Button) findViewById(R.id.btn_set);
-        btnFf = (Button) findViewById(R.id.btn_ff);
-        tvTest1 = (TextView) findViewById(R.id.tvtest1);
-        tvTest2 = (TextView) findViewById(R.id.tvtest2);
-        etColorTime = (EditText) findViewById(R.id.rt_ans_total);
-        etWaterTime = (EditText) findViewById(R.id.rt_ans_water_time);
-        etCycle = (EditText) findViewById(R.id.rt_ans_cycle);
-        etEachTime = (EditText) findViewById(R.id.rt_ans_each_time);
-        tvStep = (TextView) findViewById(R.id.data_ans_step);
-        tvCycle = (TextView) findViewById(R.id.data_ans_cycle);
-        tvTime = (TextView) findViewById(R.id.data_ans_all_time);
-        tvUser = (TextView) findViewById(R.id.data_ans_usr);
-        tvStatus = (TextView) findViewById(R.id.status);
+//        btnSet = (Button) findViewById(R.id.btn_set);
+//        btnFf = (Button) findViewById(R.id.btn_ff);
 
-        tvUser.setText("PUMP");
+        /*
+            设置资源的定位
+         */
+        etStainFlux = (EditText) findViewById(R.id.para_ans_stainflux);
+        etStainTime = (EditText) findViewById(R.id.para_ans_staintime);
+        etWaterTime = (EditText) findViewById(R.id.para_ans_watertime);
+        etDestainFlux = (EditText) findViewById(R.id.para_ans_destainflux);
+        etDestainTime = (EditText) findViewById(R.id.para_ans_destaintime);
+        etDestainCycle = (EditText) findViewById(R.id.para_ans_destaincycle);
+
+        etStainFlux.setText(String.valueOf(iMauStainSecond));
+        etStainTime.setText(String.valueOf(iMauStainStandMinute));
+        etWaterTime.setText(String.valueOf(iMauWaterCycle));
+        etDestainFlux.setText(String.valueOf(iMauDestainSecond));
+        etDestainTime.setText(String.valueOf(iMauDestainStandMinute));
+        etDestainCycle.setText(String.valueOf(iMauDestainCycle));
+
+
+        /*
+            实时信息的资源框的定位
+         */
+        tvStep = (TextView) findViewById(R.id.realtime_ans_step);
+        tvCycle = (TextView) findViewById(R.id.realtime_ans_cycle);
+        tvRemainTime = (TextView) findViewById(R.id.realtime_ans_remaintime);
+        tvStatus = (TextView) findViewById(R.id.realtime_status);
+
+
         tvStatus.setText("停止");
 
-        etColorTime.setText(String.valueOf(iMauTimeColor));
-        etWaterTime.setText(String.valueOf(iMauTimeWater));
-        etCycle.setText(String.valueOf(allowSetting ? 5 : iUserCycle));
-        etEachTime.setText(String.valueOf(iMauTimeDecolor));
+
 
         /*
             设置监听器
@@ -273,13 +353,16 @@ public class Mainview extends Activity {
         btnStart.setOnClickListener(btnListener);
         btnPause.setOnClickListener(btnListener);
         btnStop.setOnClickListener(btnListener);
-        btnSet.setOnClickListener(btnListener);
-        btnFf.setOnClickListener(btnListener);
+//        btnSet.setOnClickListener(btnListener);
+//        btnFf.setOnClickListener(btnListener);
 
+//        statusVal.Start();
         timeThread.start();
         mainThread.start();
     }
+    /*
 
+     */
     Runnable PumpControl = new Runnable() {
         @Override
         public void run() {
@@ -300,13 +383,12 @@ public class Mainview extends Activity {
                             isRestarted = false;
                             Log.i("PumpControl", "Enter Setting Part");
                             switch (Step.getStep()) {
-                                case STEP_COLOR:
+                                case STEP_STAIN:
                                     synchronized (svc.lock) {
-                                        svc.s = STRING_COLOR_STEP;
+                                        svc.s = STRING_STAIN_STEP;
                                         svc.cycle = 1;
-                                        svc.wait_time = allowSetting ? iMauTimeColor : iUserTimeColor;
-                                        svc.pump_ml_time = iColor.iFluxML;
-                                        svc.pump_ul_time = iColor.iFluxUL;
+                                        svc.wait_time = iUserStainStandMinute;
+                                        svc.pump_time = iUserStainSecond;
                                         svc.valve = 4;
                                         svc.dir = true;
                                         if (svc.dir) {
@@ -314,30 +396,27 @@ public class Mainview extends Activity {
                                         } else {
                                             svc.s += "反向";
                                         }
-                                        TempStep = STEP_COLOR;
-                                        TempTime = svc.pump_ml_time;
-                                        svc.isMLTime = true;
+                                        TempStep = STEP_STAIN;
+                                        TempTime = svc.pump_time;
                                         svc.isWaitTime = false;
                                     }
                                     break;
 
-                                case STEP_COLOR_BACK:
+                                case STEP_STAIN_REVERSE:
                                     synchronized (svc.lock) {
-                                        svc.s = STRING_COLOR_DONE;
+                                        svc.s = STRING_STAIN_FINISH;
                                         svc.cycle = 0;
-                                        svc.wait_time = allowSetting ? iMauTimeColor : iUserTimeColor;
-                                        svc.pump_ml_time = iColor.iFluxML + 2;
-                                        svc.pump_ul_time = iColor.iFluxUL;
+                                        svc.wait_time = 0;
+                                        svc.pump_time = iUserStainReverseSecond;
                                         svc.valve = 4;
                                         svc.dir = false;
-                                        TempStep = STEP_COLOR_BACK;
-                                        TempTime = svc.pump_ml_time;
+                                        TempStep = STEP_STAIN_REVERSE;
+                                        TempTime = svc.pump_time;
                                         if (svc.dir) {
                                             svc.s += "正向";
                                         } else {
                                             svc.s += "反向";
                                         }
-                                        svc.isMLTime = true;
                                         svc.isWaitTime = false;
                                     }
                                     break;
@@ -345,20 +424,18 @@ public class Mainview extends Activity {
                                 case STEP_WASH:
                                     synchronized (svc.lock) {
                                         svc.s = STRING_WASH_STEP;
-                                        svc.cycle = 1;
-                                        svc.wait_time = iWater.iFluxML + iWater.iFluxUL + 1; /* 在水洗的步骤中，只需要一直抽水古来将其洗干净就好，不需要等待步骤 */
-                                        svc.pump_ml_time = iWater.iFluxML;
-                                        svc.pump_ul_time = iWater.iFluxUL;
+                                        svc.cycle = Step.getWaterCycle();
+                                        svc.wait_time = iUserWaterStand;
+                                        svc.pump_time = iUserWaterSecond;
                                         svc.valve = 3;
                                         svc.dir = true;
                                         TempStep = STEP_WASH;
-                                        TempTime = svc.pump_ml_time;
+                                        TempTime = svc.pump_time;
                                         if (svc.dir) {
                                             svc.s += "正向";
                                         } else {
                                             svc.s += "反向";
                                         }
-                                        svc.isMLTime = true;
                                         svc.isWaitTime = false;
                                     }
                                     break;
@@ -366,63 +443,56 @@ public class Mainview extends Activity {
                                 case STEP_WASH_BACK:
                                     synchronized (svc.lock) {
                                         svc.s = STRING_WASH_STEP;
-                                        svc.cycle = Step.isStepCycle() ? Step.getInnerCycle() : 1;
-                                        svc.wait_time = iWater.iFluxML + iWater.iFluxUL + 1;
-                                        svc.pump_ml_time = iWater.iFluxML;
-                                        svc.pump_ul_time = iWater.iFluxUL;
+                                        svc.cycle = Step.getWaterCycle();
+                                        svc.wait_time = iUserWaterStand;
+                                        svc.pump_time = iUserWaterSecond;
                                         svc.valve = 1;
                                         svc.dir = false;
                                         TempStep = STEP_WASH_BACK;
-                                        TempTime = svc.pump_ml_time;
+                                        TempTime = svc.pump_time;
                                         if (svc.dir) {
                                             svc.s += "正向";
                                         } else {
                                             svc.s += "反向";
                                         }
-                                        svc.isMLTime = true;
                                         svc.isWaitTime = false;
                                     }
                                     break;
 
-                                case STEP_DECOLOR:
+                                case STEP_DESTAIN:
                                     synchronized (svc.lock) {
-                                        svc.s = STRING_DECOLOR_STEP;
-                                        svc.cycle = Step.isStepCycle() ? Step.getInnerCycle() : 1;
-                                        svc.wait_time = allowSetting ? iMauTimeDecolor : iUserTimeDecolor;
-                                        svc.pump_ml_time = iDecolor.iFluxML; /* 脱色液的数量 */
-                                        svc.pump_ul_time = iDecolor.iFluxUL;
+                                        svc.s = STRING_DESTAIN_STEP;
+                                        svc.cycle = Step.getDestainCycle();
+                                        svc.wait_time = iUserDestainStandMinute;
+                                        svc.pump_time = iUserDestainSecond; /* 脱色液的数量 */
                                         svc.valve = 2;
                                         svc.dir = true;
-                                        TempStep = STEP_DECOLOR;
-                                        TempTime = svc.pump_ml_time;
+                                        TempStep = STEP_DESTAIN;
+                                        TempTime = svc.pump_time;
                                         if (svc.dir) {
                                             svc.s += "正向";
                                         } else {
                                             svc.s += "反向";
                                         }
-                                        svc.isMLTime = true;
                                         svc.isWaitTime = false;
                                     }
                                     break;
 
-                                case STEP_DECOLOR_BACK:
+                                case STEP_DESTAIN_BACK:
                                     synchronized (svc.lock) {
-                                        svc.s = STRING_DECOLOR_STEP;
+                                        svc.s = STRING_DESTAIN_DONE;
                                         svc.cycle = 1;
-                                        svc.wait_time = allowSetting ? iMauTimeDecolor : iUserTimeDecolor;
-                                        ;
-                                        svc.pump_ml_time = iDecolor.iFluxML; /* 脱色液的数量 */
-                                        svc.pump_ul_time = iDecolor.iFluxUL;
+                                        svc.wait_time = 0;
+                                        svc.pump_time = iUserDestainReverseSecond; /* 脱色液的数量 */
                                         svc.valve = 1;
                                         svc.dir = false;
-                                        TempStep = STEP_DECOLOR_BACK;
-                                        TempTime = svc.pump_ml_time;
+                                        TempStep = STEP_DESTAIN_BACK;
+                                        TempTime = svc.pump_time;
                                         if (svc.dir) {
                                             svc.s += "正向";
                                         } else {
                                             svc.s += "反向";
                                         }
-                                        svc.isMLTime = true;
                                         svc.isWaitTime = false;
                                     }
                                     break;
@@ -491,83 +561,82 @@ public class Mainview extends Activity {
                      */
                     if (multry_for_pumpdir < MULTRY_FOR_PUMPDIR) {
                         pump.PumpDirSetting(svc.dir);
-                        multry_for_pumpdir ++;
+                        multry_for_pumpdir++;
                     }
 
-                    if (svc.isWaitTime || statusVal.isStop() || statusVal.isPause()) {
-                        if (pump.getPumpEnbState()) {
-                            pump.PumpEnbSetting(false);
-                        }
-                    } else {
-                        if (pump.getPumpEnbState() && run_for_once) {
-                            run_for_once = false;
-                            pump.PumpValveSel(svc.valve - 1);
-                            pump.PumpDirSetting(svc.dir);
-                            pump.PumpFluxML();
-                            Log.i("SecondControl", "Get Here");
-//                        } else {
-////                            pump.PumpEnbSetting(true);
-////                            pump.PumpFluxML();
-//
+                    /*
+                        判断当前的运行状态
+                     */
+
+//                    if (svc.isWaitTime || statusVal.isStop() || statusVal.isPause()) {
+//                        if (pump.getPumpEnbState()) {
+//                            pump.PumpEnbSetting(false);
+//                        }
+//                    } else {
+//                        if (pump.getPumpEnbState() && run_for_once) {
+//                            run_for_once = false;
 //                            pump.PumpValveSel(svc.valve - 1);
 //                            pump.PumpDirSetting(svc.dir);
 //                            pump.PumpFluxML();
-//                            pump.PumpEnbSetting(true);
 //                            Log.i("SecondControl", "Get Here");
 //                        }
-                        }
-                    }
+//                    }
 
                     ThreadSleep(1000);
                     /*
                         检查是否是运行状态，只检查isWaitTime对于Pump的控制
                      */
 
-                    SecondDetect();
+
 //                    if (svc.isWaitTime && pump.getPumpEnbState()) {
 //                        pump.PumpEnbSetting(false);
 //                    } else if (!svc.isWaitTime && !pump.getPumpEnbState()) {
 //                        pump.PumpEnbSetting(true);
 //                    }
 
+                    /*
+                        原来的 ML 抽水的过程
+                     */
 
-                    if (svc.isMLTime && !svc.isWaitTime) {
+                    if (!svc.isWaitTime) {
                         if (TempTime > 0) {
                             TempTime--;
-//                            Log.i("SecondControl", "Pump ML Work. Pump Dir = " + String.valueOf(svc.dir));
                         } else if (TempTime == 0) {
-                            TempTime = svc.pump_ul_time;
-                            svc.isMLTime = false;
-                        }
-
-                        count_time = svc.wait_time + TempTime - svc.pump_ml_time;
-
-                    }
-                    if (!svc.isMLTime && !svc.isWaitTime) {
-                        if (TempTime > 0) {
-                            TempTime--;
-//                            Log.i("SecondControl", "Pump UL Work. Pump Dir = " + String.valueOf(svc.dir));
-                        } else if (TempTime == 0) {
-                            TempTime = svc.wait_time - svc.pump_ul_time - svc.pump_ml_time;
+                            TempTime = svc.wait_time;
                             svc.isWaitTime = true;
-                            pump.CloseAllValve();
                         }
-
-                        count_time = svc.wait_time - svc.pump_ml_time + TempTime - svc.pump_ul_time;
-
+                        count_time = svc.wait_time + TempTime;
                     }
+
+                    /*
+                        原来的 UL 抽水的过程
+                     */
+
+//                    if (!svc.isMLTime && !svc.isWaitTime) {
+//                        if (TempTime > 0) {
+//                            TempTime--;
+////                            Log.i("SecondControl", "Pump UL Work. Pump Dir = " + String.valueOf(svc.dir));
+//                        } else if (TempTime == 0) {
+//                            TempTime = svc.wait_time - svc.pump_ul_time - svc.pump_ml_time;
+//                            svc.isWaitTime = true;
+//                            pump.CloseAllValve();
+//                        }
+//
+//                        count_time = svc.wait_time - svc.pump_ml_time + TempTime - svc.pump_ul_time;
+//
+//                    }
+
+                    /*
+                        静置等待的过程
+                     */
                     if (svc.isWaitTime) {
                         if (TempTime > 0) {
                             TempTime--;
-//                            Log.i("SecondControl", "Wait Work");
                         } else if (TempTime == 0) {
                             Step.NextStep();
                             Step.OutputMessage();
                             if (!Step.isRunningState()) {
-//                                statusVal.Stop();
-
                                 statusVal.Stop();
-                                btnSet.setClickable(true);
                                 pump.PumpEnbSetting(false);
                                 pump.CloseAllValve();
                                 RefreshDevice2InitState();
@@ -576,8 +645,8 @@ public class Mainview extends Activity {
                             }
                         }
                         count_time = TempTime;
-
                     }
+
 
                     MessageSender(TASK_SECOND_WORK, count_time, 0);
                 }
@@ -593,31 +662,30 @@ public class Mainview extends Activity {
             switch (c.getId()) {
                 case R.id.btn_start:
                     statusVal.Start();
-                    btnSet.setClickable(false);
                     pump.PumpEnbSetting(true);
                     MessageSender(TASK_STATUS_REFRESH, 0, 0);
-//                    mainThread.start();
+                    GetParaFromSetting();
                     break;
 
-                case R.id.btn_set:
-                    if (allowSetting) {
-                        iUserTimeColor = Integer.parseInt(etColorTime.getText().toString());
-                        iUserTimeColorReverse = iUserTimeColor + 2;
-                        iWater.iFluxML = Integer.parseInt(etWaterTime.getText().toString());
-                        iUserCycle = Integer.parseInt(etCycle.getText().toString());
-                        iUserTimeDecolor = Integer.parseInt(etEachTime.getText().toString());
-
-                        Log.i("iColorTime", String.valueOf(iUserTimeColor));
-                        Log.i("iWaterTime", String.valueOf(iWater.iFluxML));
-                        Log.i("iCycle", String.valueOf(iUserCycle));
-                        Log.i("iEachTime", String.valueOf(iUserTimeDecolor));
-
-                        allowSetting = false;
-                        MessageSender(TASK_SETTING_DONE, 0, 0);
-                    } else {
-                        Toast.makeText(Mainview.this, "Setting Fail", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
+//                case R.id.btn_set:
+//                    if (IsSetting) {
+//                        iUserTimeColor = Integer.parseInt(etColorTime.getText().toString());
+//                        iUserTimeColorReverse = iUserTimeColor + 2;
+//                        iWater.iFluxML = Integer.parseInt(etWaterTime.getText().toString());
+//                        iUserCycle = Integer.parseInt(etCycle.getText().toString());
+//                        iUserTimeDecolor = Integer.parseInt(etEachTime.getText().toString());
+//
+//                        Log.i("iColorTime", String.valueOf(iUserTimeColor));
+//                        Log.i("iWaterTime", String.valueOf(iWater.iFluxML));
+//                        Log.i("iCycle", String.valueOf(iUserCycle));
+//                        Log.i("iEachTime", String.valueOf(iUserTimeDecolor));
+//
+//                        IsSetting = true;
+//                        MessageSender(TASK_SETTING_DONE, 0, 0);
+//                    } else {
+//                        Toast.makeText(Mainview.this, "Setting Fail", Toast.LENGTH_SHORT).show();
+//                    }
+//                    break;
 
                 case R.id.btn_pause:
                     if (statusVal.isPause()) {
@@ -637,7 +705,6 @@ public class Mainview extends Activity {
 
                 case R.id.btn_stop:
                     statusVal.Stop();
-                    btnSet.setClickable(true);
                     pump.PumpEnbSetting(false);
                     pump.CloseAllValve();
                     RefreshDevice2InitState();
@@ -645,12 +712,12 @@ public class Mainview extends Activity {
                     MessageSender(TASK_STATUS_REFRESH, 0, 0);
                     break;
 
-                case R.id.btn_ff:
-                    Step.NextStep();
-                    Step.OutputMessage();
-                    if (Step.isRunningState() == false) {
-                        RefreshDevice2InitState();
-                    }
+//                case R.id.btn_ff:
+//                    Step.NextStep();
+//                    Step.OutputMessage();
+//                    if (Step.isRunningState() == false) {
+//                        RefreshDevice2InitState();
+//                    }
 
                 default:
                     break;
@@ -680,12 +747,10 @@ public class Mainview extends Activity {
     }
 
     private void RefreshDevice2InitState() {
-//        allowSetting = true;
         isRestarted = true;
         statusVal.PauseSetter(true);
 
-
-        Step = new StepControl(iUserCycle);
+        Step = new StepControl(iUserDestainCycle, iUserWaterCycle);
 
 
 //        svc = new StepValueControl(svc_init);
@@ -724,10 +789,12 @@ public class Mainview extends Activity {
 
     private void SecondDetect() {
         String s;
-        s = "当前步骤：" + Step.getStringStep() + " " +
+        s = "当前步骤：" + Step.getStringStep(Step.getStep()-1) + " " +
                 "水泵状态：" + String.valueOf(pump.getPumpEnbState()) + " " +
                 "水泵抽水方向：" + String.valueOf(svc.dir) + " " +
                 "阀门那个开：" + String.valueOf(svc.valve);
         Log.i("SecondDetect", s);
+
+
     }
 }

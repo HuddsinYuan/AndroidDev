@@ -4,10 +4,20 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="button_margin_horizon">20dp</dimen>
+    <dimen name="button_margin_horizon">25dp</dimen>
     <dimen name="button_margin_vertical">10dp</dimen>
     <dimen name="checkbox_padding">32dp</dimen>
 
-    <dimen name="setting_font_size">18dp</dimen>
-    <dimen name="setting_title_size">20dp</dimen>
+    <dimen name="setting_font_size">18sp</dimen>
+    <dimen name="setting_title_size">20sp</dimen>
+    <dimen name="setting_title_interval">18sp</dimen>
+    <dimen name="setting_ans_horizon_interval">3sp</dimen>
+
+
+    <dimen name="realtime_title">20sp</dimen>
+    <dimen name="realtime_font">18sp</dimen>
+    <dimen name="realtime_title_interval">18sp</dimen>
+    <dimen name="realtime_interval">10sp</dimen>
+
+    <dimen name="button_font">25sp</dimen>
 </resources>

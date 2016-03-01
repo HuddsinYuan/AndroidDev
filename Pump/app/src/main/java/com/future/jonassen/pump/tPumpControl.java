@@ -174,7 +174,7 @@ public class tPumpControl {
         Log.i(TAG, "Frequency is " + String.valueOf(ULFreq));
     }
 
-    private void CloseAllValve() {
+    public void CloseAllValve() {
 //        PumpEnbSetting(false);
 //        GPIOJNI.WriteGPIO(VALVE_GROUP, VALVE1, CLOSE_STATE);
 //        GPIOJNI.WriteGPIO(VALVE_GROUP, VALVE2, CLOSE_STATE);
