@@ -95,14 +95,14 @@ public class tPumpControl {
             enablestate = enb;
 //            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_P, CLOSE_STATE);
 //            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_N, OPEN_STATE);
-            Log.i(TAG, "Enabled");
+            Log.i(TAG, "Pump Enabled");
         } else {
             enablestate = enb;
 //            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_P, OPEN_STATE);
 //            GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_N, CLOSE_STATE);
 //            HardwareControler.PWMStop();
 
-            Log.i(TAG, "Disenabled");
+            Log.i(TAG, "Pump Disenabled");
         }
 
     }

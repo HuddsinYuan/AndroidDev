@@ -111,7 +111,7 @@ public class Mainview extends Activity {
      */
     private static final int iMauStainSecond = 100; // 可以设定
     private static final int iMauStainStandMinute = 120; // 可以设定
-    private static final int iMauStainReverseSecond = (int)(iMauStainSecond * 1.1);
+    private static final int iMauStainReverseSecond = (int) (iMauStainSecond * 1.1);
     private static final int iMauWaterSecond = iMauStainSecond;
     private static final int iMauWaterStand = 5;
     private static final int iMauWaterCycle = 3; // 可以设定
@@ -196,7 +196,7 @@ public class Mainview extends Activity {
     private StatusVal statusVal;
 
     private tPumpControl pump = new tPumpControl();
-    private StepControl Step = new StepControl(iMauDestainCycle+1, iMauWaterCycle+1);
+    private StepControl Step = new StepControl(iMauDestainCycle + 1, iMauWaterCycle + 1);
 
     private Thread mainThread;
     private Thread timeThread;
@@ -289,12 +289,12 @@ public class Mainview extends Activity {
 
         svc_init.s = STRING_STAIN_STEP;
         svc_init.cycle = 1;
-        svc_init.wait_time = IsSetting ? iUserStainStandMinute : iMauStainStandMinute;
+        svc_init.wait_time =  iMauStainStandMinute;
         /*
             为了测试将静置时间设置成sec，实际测试为min
          */
 //        svc_init.wait_time = svc_init.wait_time * 60;
-        svc_init.pump_time = IsSetting ? iUserStainSecond : iMauStainSecond;
+        svc_init.pump_time =  iMauStainSecond;
         svc_init.valve = 4;
         svc_init.dir = true;
         if (svc_init.dir) {
@@ -303,6 +303,8 @@ public class Mainview extends Activity {
             svc_init.s += "反向";
         }
         svc_init.isWaitTime = false;
+
+        PumpMessageSender(svc_init);
 
         /*
             开始资源定位
@@ -360,6 +362,7 @@ public class Mainview extends Activity {
         timeThread.start();
         mainThread.start();
     }
+
     /*
 
      */
@@ -566,21 +569,36 @@ public class Mainview extends Activity {
 
                     /*
                         判断当前的运行状态
-                     */
 
-//                    if (svc.isWaitTime || statusVal.isStop() || statusVal.isPause()) {
-//                        if (pump.getPumpEnbState()) {
-//                            pump.PumpEnbSetting(false);
-//                        }
-//                    } else {
-//                        if (pump.getPumpEnbState() && run_for_once) {
-//                            run_for_once = false;
-//                            pump.PumpValveSel(svc.valve - 1);
-//                            pump.PumpDirSetting(svc.dir);
-//                            pump.PumpFluxML();
-//                            Log.i("SecondControl", "Get Here");
-//                        }
-//                    }
+                     */
+                    if (svc.isWaitTime || statusVal.isStop() || statusVal.isPause()) {
+                        if (pump.getPumpEnbState()) {
+                            /*
+                                如果是静置时间或者暂停了或者停止了
+                                但是当前水泵是运行着的
+                                那就停止它
+                             */
+                            pump.PumpEnbSetting(false);
+                        }
+                    } else {
+                            /*
+                                如果是不暂停且不停止且是工作状态
+                                且当前确实是工作状态， run_for_once应该是个trick
+                             */
+                        if (pump.getPumpEnbState() && run_for_once) {
+                            run_for_once = false;
+                            pump.PumpValveSel(svc.valve - 1);
+                            pump.PumpDirSetting(svc.dir);
+                            pump.PumpFluxML();
+                            Log.i("SecondControl", "Get Here");
+                        }
+                            /*
+                                如果当前该工作却没有工作，开启水泵
+                             */
+                        else if (!pump.getPumpEnbState()) {
+                            pump.PumpEnbSetting(true);
+                        }
+                    }
 
                     ThreadSleep(1000);
                     /*
@@ -608,23 +626,6 @@ public class Mainview extends Activity {
                         count_time = svc.wait_time + TempTime;
                     }
 
-                    /*
-                        原来的 UL 抽水的过程
-                     */
-
-//                    if (!svc.isMLTime && !svc.isWaitTime) {
-//                        if (TempTime > 0) {
-//                            TempTime--;
-////                            Log.i("SecondControl", "Pump UL Work. Pump Dir = " + String.valueOf(svc.dir));
-//                        } else if (TempTime == 0) {
-//                            TempTime = svc.wait_time - svc.pump_ul_time - svc.pump_ml_time;
-//                            svc.isWaitTime = true;
-//                            pump.CloseAllValve();
-//                        }
-//
-//                        count_time = svc.wait_time - svc.pump_ml_time + TempTime - svc.pump_ul_time;
-//
-//                    }
 
                     /*
                         静置等待的过程
@@ -649,6 +650,8 @@ public class Mainview extends Activity {
 
 
                     MessageSender(TASK_SECOND_WORK, count_time, 0);
+                    SecondDetect();
+
                 }
             }
         }
@@ -738,7 +741,7 @@ public class Mainview extends Activity {
         Bundle bundle = new Bundle();
         m.what = TASK_MAIN_WORK;
         m.arg1 = svc.cycle;
-        m.arg2 = svc.wait_time;
+        m.arg2 = svc.wait_time + svc.pump_time;
         bundle.putInt("valve", svc.valve);
         bundle.putBoolean("dir", svc.dir);
         bundle.putString("string", svc.s);
@@ -788,12 +791,22 @@ public class Mainview extends Activity {
     }
 
     private void SecondDetect() {
-        String s;
-        s = "当前步骤：" + Step.getStringStep(Step.getStep()-1) + " " +
-                "水泵状态：" + String.valueOf(pump.getPumpEnbState()) + " " +
-                "水泵抽水方向：" + String.valueOf(svc.dir) + " " +
-                "阀门那个开：" + String.valueOf(svc.valve);
-        Log.i("SecondDetect", s);
+        String finalString;
+        String pumpStatus;
+        String pumpDirction;
+        if (svc.dir) pumpDirction = "正向";
+        else pumpDirction = "反向";
+        if (pump.getPumpEnbState()) pumpStatus = "运行";
+        else pumpStatus = "停止";
+        finalString = "当前步骤：" + Step.getStringStep(Step.getStep()) + " \n" +
+                "水泵状态：" + pumpStatus + " \n" +
+                "水泵方向：" + pumpDirction + " \n" +
+                "阀门状态：" + String.valueOf(svc.valve) + " \n" +
+                "剩余时间：" + String.valueOf(count_time) + " \n" +
+                "运行状态: " + "开始: " + String.valueOf(statusVal.isStart()) +
+                ". 暂停: " + String.valueOf(statusVal.isPause()) +
+                ". 停止: " + String.valueOf(statusVal.isStop());
+        Log.i("SecondDetect", finalString);
 
 
     }
