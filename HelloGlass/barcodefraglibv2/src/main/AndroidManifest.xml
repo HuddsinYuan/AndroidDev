@@ -33,19 +33,6 @@
         android:name="android.hardware.wifi"
         android:required="false" />
 
-    <application
-        android:allowBackup="true"
-        android:icon="@drawable/ic_glass_logo"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity
-            android:name=".sample.activity.BarcodeFragmentExampleActivity"
-            android:label="@string/app_name" ><intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+    <library></library>
 
 </manifest>

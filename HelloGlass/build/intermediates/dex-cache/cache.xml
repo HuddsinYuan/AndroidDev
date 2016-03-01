@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/Jonassen/Project/AndroidDev/HelloGlass/app/build/intermediates/exploded-aar/HelloGlass/barcodefraglibv2/unspecified/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="bdfde15dbc8e2f06ad0830b2bb61db89e11b3e30">
+        <dex dex="/Users/Jonassen/Project/AndroidDev/HelloGlass/app/build/intermediates/pre-dexed/debug/HelloGlass-barcodefraglibv2-unspecified_2793be08658a8a785c6f92d28ce3c05cdc71319e.jar" />
+    </item>
+    <item
+        jar="/Users/Jonassen/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="/Users/Jonassen/Project/AndroidDev/HelloGlass/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0_161d5899c9e01466716d4adb89484696adf63446.jar" />
+    </item>
+    <item
+        jar="/Users/Jonassen/Project/AndroidDev/HelloGlass/app/build/intermediates/exploded-aar/HelloGlass/barcodefraglibv2/unspecified/jars/libs/core.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="bf17961a1b0cfb642c19772fdcf3bac408c71622">
+        <dex dex="/Users/Jonassen/Project/AndroidDev/HelloGlass/app/build/intermediates/pre-dexed/debug/core_469a2ecf367ecc55b20a9af5b9a85450bd982380.jar" />
+    </item>
+
+</items>

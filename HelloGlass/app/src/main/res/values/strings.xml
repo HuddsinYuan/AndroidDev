@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">HelloGlass</string>
-    <string name="title_activity_first_project">Hello World Immersion</string>
+    <string name="app_name">Scan the Code</string>
+    <string name="title_activity_first_project">Scan the Code</string>
     <string name="hello_world">Hello world!</string>
-    <string name="glass_launch_command">open</string>
+    <string name="glass_launch_command">Scan Start</string>
 </resources>
