@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/QRCode"
-        android:title="Scan QRCode" />
+        android:title="QR Code" />
     <item
         android:id="@+id/BarCode"
-        android:title="Scan BarCode" />
+        android:title="Bar Code" />
 </menu>

@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.abhi.barcode.frag.libv2.BarcodeFragment;
 import com.abhi.barcode.frag.libv2.IScanResultHandler;
 import com.abhi.barcode.frag.libv2.ScanResult;
-import com.google.android.glass.app.Card;
+
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.view.WindowUtils;
@@ -51,7 +51,7 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         /*
-            使用允许 ok glass 命令
+            使用允许 ok glass 命令 调出二级菜单。
          */
         getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
 
@@ -121,6 +121,7 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
     public boolean onCreatePanelMenu(int featureId, Menu menu) {
         if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS || featureId == Window.FEATURE_OPTIONS_PANEL) {
             getMenuInflater().inflate(R.menu.main, menu);
+//            fragment.restart();
             return true;
         }
 
@@ -170,7 +171,6 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
         CardBuilder card = new CardBuilder(this, CardBuilder.Layout.COLUMNS);
         card.addImage(R.drawable.back);
         card.setText("Welcome");
-        card.setFootnote("LALALALALA");
         return card.getView();
     }
 
@@ -184,15 +184,15 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
                 if (gesture == Gesture.TAP) {
                     openOptionsMenu();
                     return true;
-                } else if (gesture == Gesture.TWO_TAP) {
-                    // do something on two finger tap
-                    return true;
-                } else if (gesture == Gesture.SWIPE_RIGHT) {
-                    // do something on right (forward) swipe
-                    return true;
-                } else if (gesture == Gesture.SWIPE_LEFT) {
-                    // do something on left (backwards) swipe
-                    return true;
+//                } else if (gesture == Gesture.TWO_TAP) {
+//                    // do something on two finger tap
+//                    return true;
+//                } else if (gesture == Gesture.SWIPE_RIGHT) {
+//                    // do something on right (forward) swipe
+//                    return true;
+//                } else if (gesture == Gesture.SWIPE_LEFT) {
+//                    // do something on left (backwards) swipe
+//                    return true;
                 } else if (gesture == Gesture.SWIPE_DOWN) {
                     finish();
                 }
@@ -200,20 +200,20 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
             }
         });
 
-        gestureDetector.setFingerListener(new GestureDetector.FingerListener() {
-            @Override
-            public void onFingerCountChanged(int previousCount, int currentCount) {
-                // do something on finger count changes
-            }
-        });
-
-        gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
-            @Override
-            public boolean onScroll(float displacement, float delta, float velocity) {
-                // do something on scrolling
-                return true;
-            }
-        });
+//        gestureDetector.setFingerListener(new GestureDetector.FingerListener() {
+//            @Override
+//            public void onFingerCountChanged(int previousCount, int currentCount) {
+//                // do something on finger count changes
+//            }
+//        });
+//
+//        gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
+//            @Override
+//            public boolean onScroll(float displacement, float delta, float velocity) {
+//                // do something on scrolling
+//                return true;
+//            }
+//        });
 
         return gestureDetector;
     }
