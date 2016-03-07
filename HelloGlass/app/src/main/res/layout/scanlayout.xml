@@ -10,9 +10,5 @@
         android:id="@+id/viewDetecter"
         android:name="com.abhi.barcode.frag.libv2.BarcodeFragment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/scan"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_height="wrap_content" />
 </LinearLayout>

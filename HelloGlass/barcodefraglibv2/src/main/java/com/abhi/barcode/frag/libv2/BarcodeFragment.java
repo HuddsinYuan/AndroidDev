@@ -234,6 +234,7 @@ public final class BarcodeFragment extends Fragment implements
 		}
 	}
 
+
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		hasSurface = false;

@@ -25,6 +25,7 @@ import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.android.camera.CameraManager;
 
 import java.util.EnumSet;
 
@@ -33,13 +34,28 @@ import java.util.EnumSet;
  */
 public class FirstProject extends FragmentActivity implements IScanResultHandler {
 
+    /*
+        由barcode.frag实现的serviceview，提供一个高效的camera支持
+     */
     private BarcodeFragment fragment;
 
-
+    /*
+        创建卡片视图
+     */
     private CardScrollView mCardScroller;
     private View mView;
+
+    /*
+        按键解析
+     */
     private GestureDetector mGestureDetector;
 
+    /*
+        为了可重复载入
+     */
+    private View scanview;
+    private CameraManager cameraManager ;
+    private boolean reentry = false;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -82,7 +98,9 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
             }
         });
 
-        // Handle the TAP event.
+        /*
+            在cardscroller阶段解析TAP时间
+         */
         mCardScroller.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -90,8 +108,19 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
             }
         });
 
+        scanview = getLayoutInflater().inflate(R.layout.scanlayout, null);
+
+        /*
+            将需要的fragment交给 fragmentManager进行管理
+        */
+        fragment = (BarcodeFragment) getSupportFragmentManager().findFragmentById(R.id.viewDetecter);
+//        cameraManager = fragment.getCameraManager();
+
+
+
         mGestureDetector = createGestureDetector(this);
         setContentView(mCardScroller);
+
 
     }
 
@@ -121,7 +150,6 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
     public boolean onCreatePanelMenu(int featureId, Menu menu) {
         if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS || featureId == Window.FEATURE_OPTIONS_PANEL) {
             getMenuInflater().inflate(R.menu.main, menu);
-//            fragment.restart();
             return true;
         }
 
@@ -136,11 +164,16 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
 
                 进行相应的取景分析等
              */
-            setContentView(R.layout.scanlayout);
-            /*
-                将需要的fragment交给 fragmentManager进行管理
-             */
-            fragment = (BarcodeFragment) getSupportFragmentManager().findFragmentById(R.id.viewDetecter);
+
+
+            setContentView(scanview);
+
+            if (reentry) {
+//                fragment.onCreateView(getLayoutInflater(), null, null);
+                fragment.onResume();
+            }
+
+            if (!reentry) reentry = true;
 
             /*
                 根据选定的条目进行相应的解析设置
@@ -160,12 +193,16 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
 
             原文：Once registered with Fragment as setScanResultHandler the result will be forwarded to the registered class.
 
-         */
+            */
+
             fragment.setScanResultHandler(this);
         }
         return super.onMenuItemSelected(featureId, item);
     }
 
+    /*
+        设置初始的欢迎界面
+     */
     public View buildView() {
 
         CardBuilder card = new CardBuilder(this, CardBuilder.Layout.COLUMNS);
@@ -174,46 +211,28 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
         return card.getView();
     }
 
+    /*
+        手势检测的回调
+     */
     private GestureDetector createGestureDetector(Context context) {
         GestureDetector gestureDetector = new GestureDetector(context);
 
-        //Create a base listener for generic gestures
         gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
-                if (gesture == Gesture.TAP) {
+
+                if (gesture == Gesture.TAP || gesture == Gesture.SWIPE_UP) {
+                    if (reentry) fragment.onPause();
                     openOptionsMenu();
                     return true;
-//                } else if (gesture == Gesture.TWO_TAP) {
-//                    // do something on two finger tap
-//                    return true;
-//                } else if (gesture == Gesture.SWIPE_RIGHT) {
-//                    // do something on right (forward) swipe
-//                    return true;
-//                } else if (gesture == Gesture.SWIPE_LEFT) {
-//                    // do something on left (backwards) swipe
-//                    return true;
                 } else if (gesture == Gesture.SWIPE_DOWN) {
                     finish();
                 }
+
                 return false;
+
             }
         });
-
-//        gestureDetector.setFingerListener(new GestureDetector.FingerListener() {
-//            @Override
-//            public void onFingerCountChanged(int previousCount, int currentCount) {
-//                // do something on finger count changes
-//            }
-//        });
-//
-//        gestureDetector.setScrollListener(new GestureDetector.ScrollListener() {
-//            @Override
-//            public boolean onScroll(float displacement, float delta, float velocity) {
-//                // do something on scrolling
-//                return true;
-//            }
-//        });
 
         return gestureDetector;
     }
@@ -223,19 +242,28 @@ public class FirstProject extends FragmentActivity implements IScanResultHandler
         if (mGestureDetector != null) {
             return mGestureDetector.onMotionEvent(event);
         }
+
         return false;
+
     }
 
     @Override
     protected void onResume() {
-        super.onResume();
         mCardScroller.activate();
+        fragment.onResume();
+        super.onResume();
     }
 
     @Override
     protected void onPause() {
         mCardScroller.deactivate();
+        fragment.onPause();
         super.onPause();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        fragment.onDestroy();
+    }
 }
