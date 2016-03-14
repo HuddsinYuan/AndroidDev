@@ -28,6 +28,8 @@ public class tPumpControl {
 
 
     private boolean enablestate;
+    private boolean waystate;
+    private int valvesel;
 
     private static final int MLFreq_Inc1 = 5000;
     private static final int MLFreq_Inc2 = 10000;
@@ -63,7 +65,7 @@ public class tPumpControl {
  */
 //        HardwareControler.PWMStop();
 
-        Log.i(TAG, String.format("PumpIOInit"));
+        Log.i(TAG, "水泵初始化完成.");
     }
 
     /*  DIR+ -->5V
@@ -72,14 +74,15 @@ public class tPumpControl {
         ELSE  逆时针
      */
     public void PumpDirSetting(boolean way) {
+        waystate = way;
         if (way) {
 //            GPIOJNI.WriteGPIO(CONTROL_GROUP, DIR_P, OPEN_STATE);
 //            GPIOJNI.WriteGPIO(CONTROL_GROUP, DIR_N, CLOSE_STATE);
-            Log.i(TAG, "Positive Way Setting Ok. +Way = " + String.valueOf(way));
+            Log.i(TAG, "水泵方向：正向[对着人]。 +Way = " + String.valueOf(way));
         } else {
 //            GPIOJNI.WriteGPIO(CONTROL_GROUP, DIR_P, CLOSE_STATE);
 //            GPIOJNI.WriteGPIO(CONTROL_GROUP, DIR_N, OPEN_STATE);
-            Log.i(TAG, "Negative Way Setting Ok. +Way = " + String.valueOf(way));
+            Log.i(TAG, "水泵方向：反向[背着人] +Way = " + String.valueOf(way));
         }
 
     }
@@ -112,6 +115,7 @@ public class tPumpControl {
     }
 
     public void PumpValveSel(int num) {
+        valvesel = num;
         switch (num) {
             case VALVE1:
                 CloseAllValve();
@@ -182,5 +186,11 @@ public class tPumpControl {
 //        GPIOJNI.WriteGPIO(VALVE_GROUP, VALVE4, CLOSE_STATE);
         Log.i(TAG, "Close All Valve.");
 //        PumpEnbSetting(true);
+    }
+
+    public void OutputInfo() {
+        String s  = "当前" + String.valueOf(valvesel) + "号阀门打开，水泵运行状态为" +
+                String.valueOf(enablestate) + " 抽水方向为" + String.valueOf(waystate);
+        Log.i("SecondDetect", s);
     }
 }

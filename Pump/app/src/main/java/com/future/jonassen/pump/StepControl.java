@@ -23,6 +23,8 @@ public class StepControl {
     public int DestainTime;
     public int WaterTime;
 
+    public boolean IsLastTime = false;
+
     private boolean run_for_once = true;
 
     public int getDestainCycle() {
@@ -84,17 +86,27 @@ public class StepControl {
 
     public void NextStep() {
         if (RunningState) {
+
+            /*
+                最后停止阶段的判断
+             */
+            if (iStep == STEP_DESTAIN_REVERSE && destainCycle == DestainTime - 2) {
+                IsLastTime = true;
+            }
+            if (iStep == STEP_DESTAIN && destainCycle == DestainTime - 1) {
+                RunningState = false;
+
+            }
+
             /*
                 水洗的次数判断
              */
-            if (iStep == STEP_DESTAIN && destainCycle == DestainTime - 1) {
-                RunningState = false;
-            } else if (iStep == STEP_WASH_BACK && waterCycle < WaterTime - 1) {
+            else if (iStep == STEP_WASH_BACK && waterCycle < (WaterTime - 1)) {
                 iStep = STEP_WASH;
                 waterCycle++;
             }
             /*
-                脱色的次数判断，最后要停留在脱色阶段
+                脱色的次数判断
              */
             else if (iStep == STEP_DESTAIN && destainCycle < DestainTime - 1) {
                 iStep = STEP_DESTAIN_REVERSE;

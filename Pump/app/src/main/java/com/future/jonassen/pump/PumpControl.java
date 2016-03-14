@@ -111,6 +111,7 @@ public class PumpControl
             GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_P, OPEN_STATE);
             GPIOJNI.WriteGPIO(CONTROL_GROUP, ENB_N, CLOSE_STATE);
             HardwareControler.PWMStop();
+            this.CloseAllValve();
 
             Log.i(TAG, "Disenabled");
         }
