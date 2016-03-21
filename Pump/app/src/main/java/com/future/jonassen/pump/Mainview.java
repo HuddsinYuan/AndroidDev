@@ -564,9 +564,9 @@ public class Mainview extends Activity {
 //                        Log.i("SecondControl", "Enter SecondControl Thread");
 
                     /*
-                        前三秒尝试多次设置旋转方向，共尝试三次
+                        一直尝试翻转
                      */
-                    if (multry_for_pumpdir < MULTRY_FOR_PUMPDIR) {
+                    if (multry_for_pumpdir < svc.pump_time) {
                         pump.PumpDirSetting(svc.dir);
                         multry_for_pumpdir++;
                     }
