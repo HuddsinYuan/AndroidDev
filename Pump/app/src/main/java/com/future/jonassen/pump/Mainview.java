@@ -150,7 +150,7 @@ public class Mainview extends Activity {
         iUserStainReverseSecond = (int) (1.3 * iUserStainSecond);
         iUserWaterSecond = iUserStainSecond;
         iUserWaterStand = iMauWaterStand;
-        iUserDestainReverseSecond = (int)(iUserDestainSecond*1.1);
+        iUserDestainReverseSecond = (int) (iUserDestainSecond * 1.1);
         printSettingInfo();
     }
 
@@ -196,10 +196,10 @@ public class Mainview extends Activity {
         为了测试添加
      */
 
-    private Class<StatusVal> cls; //statusVal的反射类
+//    private Class<StatusVal> cls; //statusVal的反射类
     private StatusVal statusVal;
 
-    private tPumpControl pump = new tPumpControl();
+    private PumpControl pump = new PumpControl();
     private StepControl Step = new StepControl(iMauDestainCycle, iMauWaterCycle);
 
     private Thread mainThread;
@@ -285,6 +285,7 @@ public class Mainview extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainview);
+        Log.i("Mainview", "Start Main Activity");
         pump.PumpIOInit();
         mainThread = new Thread(PumpControl);
         timeThread = new Thread(SecondControl);
@@ -414,7 +415,7 @@ public class Mainview extends Activity {
                                     synchronized (svc.lock) {
                                         svc.s = STRING_STAIN_FINISH;
                                         svc.cycle = 0;
-                                        svc.wait_time = 0;
+                                        svc.wait_time = 1;
                                         svc.pump_time = iUserStainReverseSecond;
                                         svc.valve = 4;
                                         svc.dir = false;
@@ -452,7 +453,7 @@ public class Mainview extends Activity {
                                     synchronized (svc.lock) {
                                         svc.s = STRING_WASH_STEP;
                                         svc.cycle = Step.getWaterCycle() + 1;
-                                        svc.wait_time = 0;
+                                        svc.wait_time = 1;
                                         svc.pump_time = (int) (iUserWaterSecond * 1.2);
                                         svc.valve = 1;
                                         svc.dir = false;
@@ -490,7 +491,7 @@ public class Mainview extends Activity {
                                     synchronized (svc.lock) {
                                         svc.s = STRING_DESTAIN_DONE;
                                         svc.cycle = Step.getDestainCycle() + 1;
-                                        svc.wait_time = 0;
+                                        svc.wait_time = 1;
                                         svc.pump_time = iUserDestainReverseSecond; /* 脱色液的数量 */
                                         svc.valve = 1;
                                         svc.dir = false;
@@ -514,7 +515,7 @@ public class Mainview extends Activity {
                          */
                             synchronized (svc.lock) {
 
-                                multry_for_pumpdir = 0;
+//                                multry_for_pumpdir = 0;
 
                                 PumpMessageSender(svc);
 //                                set_ok = true;
@@ -566,10 +567,8 @@ public class Mainview extends Activity {
                     /*
                         一直尝试翻转
                      */
-                    if (multry_for_pumpdir < svc.pump_time) {
-                        pump.PumpDirSetting(svc.dir);
-                        multry_for_pumpdir++;
-                    }
+
+
 
                     /*
                         判断当前的运行状态
@@ -587,7 +586,7 @@ public class Mainview extends Activity {
                     } else {
                             /*
                                 如果是不暂停且不停止且是工作状态
-                                且当前确实是工作状态， run_for_once应该是个trick
+                                且当前确实是工作状态， run_for_onc是为了控制暂停
                              */
                         if (pump.getPumpEnbState() && run_for_once) {
                             run_for_once = false;
@@ -604,7 +603,9 @@ public class Mainview extends Activity {
                         }
                     }
 
-                    ThreadSleep(1000);
+                    pump.PumpDirSetting(svc.dir);
+                    pump.PumpDirSetting(svc.dir);
+                    pump.PumpDirSetting(svc.dir);
                     /*
                         检查是否是运行状态，只检查isWaitTime对于Pump的控制
                      */
@@ -615,6 +616,9 @@ public class Mainview extends Activity {
                     } else if (!svc.isWaitTime && !pump.getPumpEnbState()) {
                         pump.PumpEnbSetting(true);
                     }
+
+                    ThreadSleep(1000);
+
 
                     /*
                         原来的 ML 抽水的过程

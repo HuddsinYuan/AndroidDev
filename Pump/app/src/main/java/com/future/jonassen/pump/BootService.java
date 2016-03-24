@@ -18,6 +18,5 @@ public class BootService extends BroadcastReceiver {
         mainActivityIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(mainActivityIntent);
-
     }
 }

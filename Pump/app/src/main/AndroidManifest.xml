@@ -26,6 +26,7 @@
         <receiver
             android:name=".BootService"
             android:exported="true"
+            android:enabled="true"
             >
 
             <intent-filter>
