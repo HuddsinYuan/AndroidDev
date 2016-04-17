@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.future.jonassen.bluetooth">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!--
+        make my app available to the device didn't support BLE
+
+        and at run-time you can determine BLE availability by using PackageManager.hasSystemFeature()
+
+
+    // Use this check to determine whether BLE is supported on the device. Then
+    // you can selectively disable BLE-related features.
+    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+        Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+        finish();
+    }
+    -->
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".DeviceListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+
+    </application>
+
+</manifest>
