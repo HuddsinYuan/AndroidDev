@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/Jonassen/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.0/support-annotations-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
+        <dex dex="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/pre-dexed/debug/support-annotations-23.0.0-b5f60d7f4b18d6b2127cc4ef1358dfffdd7d2a20.jar" />
+    </item>
+    <item
+        jar="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/libs/internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
+        <dex dex="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/pre-dexed/debug/internal_impl-23.0.0-3b0bd96800c1a4155b582f97f6c4bf4abf08db2b.jar" />
+    </item>
+    <item
+        jar="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1ccbc26be2c465c622a48310e8092241b01abe80">
+        <dex dex="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/pre-dexed/debug/classes-e0f6f3bec755298d539ce5ab87a2c5632d60fcdc.jar" />
+    </item>
+    <item
+        jar="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/exploded-aar/com.android.support/support-v13/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="bb0ac3f3ee2d71854501cc28e52cc84a20209b41">
+        <dex dex="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/pre-dexed/debug/classes-cfda1d13dc2306fbea5ed33a480729bf3f52f7e3.jar" />
+    </item>
+    <item
+        jar="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
+        <dex dex="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/pre-dexed/debug/classes-3f780781527fd0830b0b1fe41345da89af4fa82f.jar" />
+    </item>
+    <item
+        jar="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/exploded-aar/com.android.support/support-v13/23.0.0/jars/libs/internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="5d4bccb885c8a89d066ecb6c4addb553a99a79a2">
+        <dex dex="/Users/Jonassen/Project/AndroidDev/BluetoothLeGatt/Application/build/intermediates/pre-dexed/debug/internal_impl-23.0.0-d0f9f66d9e09880655b6bbfa90db9f2fa786002d.jar" />
+    </item>
+
+</items>
